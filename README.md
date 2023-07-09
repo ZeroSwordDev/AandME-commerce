@@ -1,8 +1,16 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
+Update 09-07-2023
+![image](https://github.com/ZeroSwordDev/AandME-commerce/assets/113391622/b9f60ae8-3d5f-405f-8d19-93be1543c8a9)
 
-First, run the development server:
+
+
+Desing 
+First, run ![imprenta aandm](https://github.com/ZeroSwordDev/AandME-commerce/assets/113391622/ec19f168-34d9-4658-8068-a049c842e67d)
+
+
+the development server:
 
 ```bash
 npm run dev
