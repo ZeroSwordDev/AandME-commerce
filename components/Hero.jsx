@@ -21,7 +21,7 @@ const Hero = () => {
         />
       </div>
       {/* Categories */}
-      <div className=" flex flex-wrap  h-[700px]  items-center  w-full gap-2   lg:h-[230px] space-x-2 mt-2 ">
+      <div className=" flex flex-wrap  h-[700px]  items-center  w-full gap-2   lg:h-[230px]  mt-2 ">
         <div className="relative  flex-grow overflow-hidden h-52 w-[460px] rounded-xl  ">
           {/* overlay */}
           <div className="absolute bg-purple-900/60  w-full h-full"></div>
