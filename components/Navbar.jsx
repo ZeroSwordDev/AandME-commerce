@@ -6,9 +6,9 @@ const Navbar = () => {
     <div className="  max-w-[1420px] h-auto mx-auto px-6 py-6">
       <div className=" flex justify-between items-center mx-6">
         {/* left */}
-        <div className="">
+        <div className="text-center">
           {/* <img src="/logo.png" alt="" /> */}
-          <h1 className="text-3xl  md:text-4xl font-bold  ">AandM</h1>
+          <h1 className="text-2xl  md:text-3xl font-italic  ">Not<span className=" font-extrabold bg-purple-600 rounded-xl text-white  border-2   p-2">Only a</span>Desing</h1>
         </div>
         {/* center */}
         <div className="hidden xl:flex items-center px-3 w-[830px]  bg-gray-100 h-8 rounded-lg">
