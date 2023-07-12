@@ -6,7 +6,7 @@ const Hero = () => {
       <div className="relative w-full overflow-hidden left-0 h-[340px] rounded-3xl   ">
         <div className=" absolute w-full h-full bg-black/60 rounded-3xl"></div>
 
-        <div className="absolute top-[23%] left-20 space-y-2 ">
+        <div className="absolute top-[20%] left-5 space-y-2 md:left-14 lg:left-20">
           <h1 className="text-5xl text-white">
             {" "}
             <span className="text-6xl font-bold">Stickers </span> en Oferta
@@ -21,7 +21,7 @@ const Hero = () => {
         />
       </div>
       {/* Categories */}
-      <div className=" flex flex-wrap  h-[700px]  items-center  w-full gap-2   lg:h-[230px] space-x-2 mt-2 ">
+      <div className=" flex flex-wrap  h-[700px]  items-center  w-full gap-2   lg:h-[230px]  mt-2 ">
         <div className="relative  flex-grow overflow-hidden h-52 w-[460px] rounded-xl  ">
           {/* overlay */}
           <div className="absolute bg-purple-900/60  w-full h-full"></div>
@@ -47,7 +47,7 @@ const Hero = () => {
           <div className="absolute bg-red-800/60  w-full h-full"></div>
 
           <div className="absolute top-[20%] left-10">
-            <h1 className="text-5xl text-white font-semibold">
+            <h1 className="text-3xl text-white font-semibold lg:text-5xl">
               Diseño Grafico
             </h1>
             <p className="text-white text-ms font-light">
