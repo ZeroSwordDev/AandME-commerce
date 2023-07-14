@@ -2,7 +2,7 @@ import React from "react";
 
 const Hero = () => {
   return (
-    <section id="hero" className="max-w-[1440px] h-screen mx-auto mt-4 px-2">
+    <section id="hero" className="max-w-[1440px] h-auto mx-auto mt-4 px-2">
       <article className="relative w-full overflow-hidden left-0 h-[340px] rounded-3xl   ">
         <div className=" absolute w-full h-full bg-black/60 rounded-3xl"></div>
 
@@ -83,7 +83,7 @@ const Hero = () => {
         </article>
       </div>
       {/* Section  */}
-        <article className=" flex flex-wrap justify-between items-center w-full h-52">
+        <article className="hidden lg:flex flex-wrap justify-between items-center w-full h-52">
           <div className="flex items-center px-4 h-52 w-52 ">
             <h2 className="text-3xl">Realiza tu Compra en <strong>5 sencillos pasos</strong></h2>
           </div>
@@ -113,6 +113,7 @@ const Hero = () => {
             <h2 className="text-2xl">Retira o recibe tu producto</h2>
           </div>
         </article>
+        <hr className="w-full border-black/20" />
     </section>
   );
 };
