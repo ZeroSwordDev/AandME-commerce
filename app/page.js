@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import Navbar from "@/components/Navbar";
 import Products from "@/components/Products";
@@ -13,14 +14,9 @@ export default function Home() {
       <header>
         <Hero />
         <Products />
-      
       </header>
-      <footer >
-        <div className=" h-[180px] w-screen flex flex-col justify-end text-white bg-black">
-          <div className="w-full h-12 mb-8  bg-white">
-
-          </div>
-        </div>
+      <footer>
+        <Footer />
       </footer>
     </main>
   );
