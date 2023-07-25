@@ -3,9 +3,11 @@ import { NextResponse } from "next/server";
 
 export const GET = async (request) => {
   try {
-    const users = await db.user.find();
 
-    return NextResponse.json(users, { status: 200 });
+    const db = await dbConnect()
+    const products = await db.products.find();
+
+    return NextResponse.json(products, { status: 200 });
   } catch (error) {
     return NextResponse.json("dataBase not found Users", { status: 501 });
   }
