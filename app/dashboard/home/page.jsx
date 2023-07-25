@@ -3,8 +3,8 @@ import { useSession } from "next-auth/react";
 import React from "react";
 
 const home = () => {
-  const { data } = useSession()
-  console.log(data);
+  const session = useSession()
+  console.log(session);
 
   return <div>home</div>;
 };
