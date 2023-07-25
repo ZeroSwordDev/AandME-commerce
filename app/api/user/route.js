@@ -35,6 +35,3 @@ export const POST = async (request) => {
     return NextResponse.json(newUser, { status: 200 });
   }
 };
-
-
-
