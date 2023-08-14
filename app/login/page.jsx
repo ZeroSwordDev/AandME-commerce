@@ -7,50 +7,69 @@ import {
   Typography,
   Input,
   Checkbox,
-  Button,
+/*   Button, */
 } from "@material-tailwind/react";
- 
-import { useSession, signIn, signOut } from "next-auth/react"
+import  Button  from 'library-aandm/src/index'
+import { signIn, signOut, useSession } from "next-auth/react";
+import { redirect } from 'next/navigation'
+import { useEffect, useState } from "react";
 export default function page() {
+
+  const [credetials, setCredetials] = useState({
+    Email: "",
+  });
+
+  const { Email } = credetials;
+  const changeCredentials = (e) => {
+    setCredetials({
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+   await signIn("credentials", { Email, callbackUrl: '/dashboard/home' })
+  };
+
+ /*  useEffect(() => {console.log(hola)}, []); */
   return (
     <div className="flex h-screen items-center justify-center">
-      
-    <Card className="w-96">
-      <CardHeader
-        variant="gradient"
-        color="blue"
-        className="mb-4 grid h-28 place-items-center"
-      >
-        <Typography variant="h3" color="white">
-          Sign In
-        </Typography>
-      </CardHeader>
-      <CardBody className="flex flex-col gap-4">
-        <Input label="Email" size="lg" />
-        <Input label="Password" size="lg" />
-        <div className="-ml-2.5">
-          <Checkbox label="Remember Me" />
-        </div>
-      </CardBody>
-      <CardFooter className="pt-0">
-        <Button onClick={() => signIn('google', { callbackUrl: '/dashboard/home'})} variant="gradient" fullWidth>
-          Sign In
-        </Button>
-        <Typography variant="small" className="mt-6 flex justify-center">
-          Don't have an account?
-          <Typography
-            as="a"
-            href="#signup"
-            variant="small"
+      <form onSubmit={handleSubmit}>
+        <Card className="w-96">
+          <CardHeader
+            variant="gradient"
             color="blue"
-            className="ml-1 font-bold"
+            className="mb-4 grid h-28 place-items-center"
           >
-            Sign up
-          </Typography>
-        </Typography>
-      </CardFooter>
-    </Card>
+            <Typography variant="h3" color="white">
+              Sign In
+            </Typography>
+          </CardHeader>
+          <CardBody className="flex flex-col gap-4">
+            <Input
+              label="Email"
+              name="Email"
+              size="lg"
+              onChange={changeCredentials}
+            />
+            <Input
+              label="Password"
+              name="password"
+              size="lg"
+              onChange={changeCredentials}
+            />
+            <div className="-ml-2.5">
+              <Checkbox label="Remember Me" />
+            </div>
+          </CardBody>
+          <CardFooter className="pt-0">
+            <Button type="submit" variant="gradient" fullWidth>
+              Sign In
+            </Button>
+          </CardFooter>
+        </Card>
+      </form>
     </div>
   );
 }
-

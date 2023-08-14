@@ -5,9 +5,9 @@ import React from "react";
 
 const layout = ({children}) => {
   return (
-    <div className="flex h-screen w-screen items-center   justify-between">
+    <div className=" flex h-full w-full items-center   justify-between">
+        <div className=" flex w-full h-screen   ">
         <SideBarDashboard/>
-        <div className=" w-full h-full p-4 ">
             {children}
         </div>
     </div>
