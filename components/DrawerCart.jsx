@@ -6,11 +6,18 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ViewCartProduct from "./ViewCartProduct";
+import { removeAllCart } from "@/redux/cart/cartSlice";
 
 const DrawerCart = ({ closeDrawer, open }) => {
   const cart = useSelector((state) => state.cart.cart);
+
+ const  totalAmount = cart.reduce((acc, obj) => acc + (obj.quantity * obj.price) , 0)
+
+  
+
+  const dispatch = useDispatch()
   return (
     <div
       className=" h-full w-full z-40 select-none"
@@ -54,9 +61,9 @@ const DrawerCart = ({ closeDrawer, open }) => {
         </div>
 
         <div className="flex bg-black text-white items-center gap-3 justify-evenly  w-full h-24 rounded-sm">
-          <h3 className="ml-9">Total: $3000</h3>
+          <h3 className="ml-9">Total: ${totalAmount}</h3>
           <button className="bg-white text-black p-2 rounded-md ">Pagar</button>
-          <button className="bg-white text-black p-2 rounded-md mr-3 ">
+          <button className="bg-white text-black p-2 rounded-md mr-3 " onClick={() => dispatch(removeAllCart())}>
             vaciar
           </button>
         </div>
