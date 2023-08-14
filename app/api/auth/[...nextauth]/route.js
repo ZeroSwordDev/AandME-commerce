@@ -8,12 +8,16 @@ const handler = NextAuth({
     CredentialsProvider({
       name: "Credentials",
       async authorize(credentials) {
-        const db = await dbConnect();
-        const user = await db.user.find({ Email: credentials?.Email });
-
-        if (!user) return new Error("Email no existe en la base de datos!");
-
-        return user;
+        try {
+          const db = await dbConnect();
+          const user = await db.user.find({ Email: credentials?.Email });
+          if (user.length > 0) {
+            return user;
+          }
+           return null;
+        } catch (error) {
+          return null;
+        }
       },
     }),
   ],
@@ -32,7 +36,6 @@ const handler = NextAuth({
   },
   pages: {
     signIn: "/login",
-    error: "/login",
   },
   session: {
     strategy: "jwt",

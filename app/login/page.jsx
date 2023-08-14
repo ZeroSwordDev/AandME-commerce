@@ -7,16 +7,17 @@ import {
   Typography,
   Input,
   Checkbox,
-  Button,
+/*   Button, */
 } from "@material-tailwind/react";
-
-import { signIn, signOut } from "next-auth/react";
-import { useState } from "react";
+import  Button  from 'library-aandm/src/index'
+import { signIn, signOut, useSession } from "next-auth/react";
+import { redirect } from 'next/navigation'
+import { useEffect, useState } from "react";
 export default function page() {
+
   const [credetials, setCredetials] = useState({
     Email: "",
   });
-
 
   const { Email } = credetials;
   const changeCredentials = (e) => {
@@ -28,10 +29,10 @@ export default function page() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    await signIn("credentials", { Email ,callbackUrl: '/dashboard/home' });
- 
-
+   await signIn("credentials", { Email, callbackUrl: '/dashboard/home' })
   };
+
+ /*  useEffect(() => {console.log(hola)}, []); */
   return (
     <div className="flex h-screen items-center justify-center">
       <form onSubmit={handleSubmit}>

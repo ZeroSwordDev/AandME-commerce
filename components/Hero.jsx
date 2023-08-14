@@ -2,7 +2,7 @@ import React from "react";
 
 const Hero = () => {
   return (
-    <section id="hero" className="max-w-[1440px] h-auto mx-auto mt-4 px-2">
+    <section id="hero" className="max-w-[1440px] h-full mx-auto mt-4 px-2">
       <article className="relative w-full overflow-hidden left-0 h-[340px] rounded-3xl   ">
         <div className=" absolute w-full h-full bg-black/60 rounded-3xl"></div>
 
