@@ -14,14 +14,13 @@ import {
   TabsHeader,
 } from "@material-tailwind/react";
 import { useParams, useRouter } from "next/navigation";
-
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const page = () => {
   const params = useParams();
   const _items = useSelector((state) => state.detailProduct.detailsProduct);
-  const router = useRouter()
+  const router = useRouter();
   const loading = useSelector((state) => state.detailProduct.loading);
 
   const dispatch = useDispatch();
@@ -43,15 +42,20 @@ const page = () => {
     },
   ];
 
+  const newItems = { ..._items };
+  console.log(newItems);
+  const sizes = newItems.amount;
+  const amount = newItems.size;
+
   return (
     <>
       {loading ? (
         <div className="h-[66vh] w-ful flex items-center justify-center">
-          <Spinner className="h-32 w-32 "  />
+          <Spinner className="h-32 w-32 " />
         </div>
       ) : (
         <div className=" max-w-[1440px] mx-auto h-full  p-3">
-          <RiArrowLeftSLine cursor={'pointer'}  onClick={() => router.back()}/>
+          <RiArrowLeftSLine cursor={"pointer"} onClick={() => router.back()} />
           <h2 className=" text-2xl m-7">{_items.name}</h2>
           <div className="flex p-1 gap-6 ">
             <div className="w-[700px] h-[500px] flex-1">
@@ -66,45 +70,101 @@ const page = () => {
             <div className="flex-1">
               <div className="flex flex-col w-full h-full justify-between">
                 <div className="">
-                  <h4>Tamaño</h4>
-                  <Select>
-                    <Option>Material Tailwind HTML</Option>
-                  </Select>
-                </div>
-                <div className="">
-                  <h4>Cantidad</h4>
-                  <Select>
-                    <Option
-                      value="sdasd"
-                      className=" text-black focus:text-black"
+                  <div className="flex w-full flex-col gap-6">
+                    <label htmlFor="">Tamaño</label>
+                    <select
+                      style={{
+                        borderBottom: "1px solid black",
+                      }}
                     >
-                      Material Tailwind HTML
-                    </Option>
-                  </Select>
+                      {sizes?.map((item, index) => (
+                        <option key={index} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
                 <div className="">
-                  <h4>Tipo de Adhesivo</h4>
-                  <Select>
-                    <Option>Material Tailwind HTML</Option>
-                  </Select>
+                  <div className="flex w-full flex-col gap-6">
+                    <label htmlFor="">Cantidad</label>
+                    <select
+                      style={{
+                        borderBottom: "1px solid black",
+                      }}
+                    >
+                      {amount?.map((item, index) => (
+                        <option key={index} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
                 <div className="">
-                  <h4>Corte Entrega Final</h4>
-                  <Select>
-                    <Option>Material Tailwind HTML</Option>
-                  </Select>
+                  <div className="flex w-full flex-col gap-6">
+                    <Select
+                      variant="static"
+                      color="purple"
+                      labelProps={{
+                        style: {
+                          color: "black",
+                        },
+                      }}
+                      label="Tipo de Adhesivo"
+                    >
+                      <Option>Material Tailwind HTML</Option>
+                      <Option>Material Tailwind React</Option>
+                      <Option>Material Tailwind Vue</Option>
+                      <Option>Material Tailwind Angular</Option>
+                      <Option>Material Tailwind Svelte</Option>
+                    </Select>
+                  </div>
                 </div>
                 <div className="">
-                  <h4>Tiempo de producción</h4>
-                  <Select>
-                    <Option>Material Tailwind HTML</Option>
-                  </Select>
+                  <div className="flex w-full flex-col gap-6 ">
+                    <Select
+                      variant="static"
+                      color="purple"
+                      labelProps={{
+                        style: {
+                          color: "black",
+                        },
+                      }}
+                      label="Corte Entrega Final"
+                    >
+                      <Option>Material Tailwind HTML</Option>
+                      <Option>Material Tailwind React</Option>
+                      <Option>Material Tailwind Vue</Option>
+                      <Option>Material Tailwind Angular</Option>
+                      <Option>Material Tailwind Svelte</Option>
+                    </Select>
+                  </div>
+                </div>
+                <div className="">
+                  <div className="flex w-full flex-col gap-6">
+                    <Select
+                      variant="static"
+                      color="purple"
+                      optio
+                      labelProps={{
+                        style: {
+                          color: "black",
+                        },
+                      }}
+                      label="Tiempo de producción"
+                    >
+                      <Option>Material Tailwind HTML</Option>
+                      <Option>Material Tailwind React</Option>
+                      <Option>Material Tailwind Vue</Option>
+                      <Option>Material Tailwind Angular</Option>
+                      <Option>Material Tailwind Svelte</Option>
+                    </Select>
+                  </div>
                 </div>
 
                 <div className="flex flex-col w-full justify-end items-end ">
-                  <h5>
-                    TOTAL iva inc : $ 23.050 <s>$ 26.445</s>{" "}
-                  </h5>
+                  <h5>TOTAL: $ {_items.price}</h5>
                   <p className="font-bold">Precio unitario:$ 234</p>
                 </div>
               </div>
@@ -112,22 +172,12 @@ const page = () => {
           </div>
           <div className=" flex mt-3 mb-3 w-full h-96">
             <div className="flex flex-col flex-1 w-full h-full">
-              <Tabs value="html">
-                <TabsHeader>
-                  {data.map(({ label, value }) => (
-                    <Tab key={value} value={value}>
-                      {label}
-                    </Tab>
-                  ))}
-                </TabsHeader>
-                <TabsBody>
-                  {data.map(({ value, desc }) => (
-                    <TabPanel key={value} value={value}>
-                      {desc}
-                    </TabPanel>
-                  ))}
-                </TabsBody>
-              </Tabs>
+              <div className="w-full flex items-center border-b-2  border-gray-700/40 h-8">
+                <h3>Descripcion</h3>
+              </div>
+              <div className="w-full h-full p-4 ">
+                <p>{_items.desc}</p>
+              </div>
             </div>
             <div className="flex items-center justify-center flex-col flex-1 w-full h-full gap-3">
               <Button fullWidth className=" h-24">

@@ -9,7 +9,7 @@ import {
   PresentationChartBarIcon,
   ShoppingBagIcon,
   UserCircleIcon,
-  Cog6ToothIcon,
+/*   Cog6ToothIcon, */
   PowerIcon,
 } from "@heroicons/react/24/solid";
 import Link from "next/link";

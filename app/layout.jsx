@@ -11,30 +11,26 @@ import { useState } from "react";
 import DrawerCart from "@/components/DrawerCart";
 
 export default function RootLayout({ children }) {
-
-
   const [open, setOpen] = useState(false);
- 
   const openDrawer = () => setOpen(true);
-  const closeDrawer = () => setOpen(false)
- 
+  const closeDrawer = () => setOpen(false);
 
   return (
     <html>
       <body className="overflow-x-hidden">
         <Provider store={store}>
+          <AuthProtected>
           <nav>
-            <DrawerCart closeDrawer={closeDrawer} open={open}/>
-            <Navbar openDrawer={openDrawer}  />
+            <DrawerCart closeDrawer={closeDrawer} open={open} />
+            <Navbar openDrawer={openDrawer} />
             <SubNavbar />
           </nav>
-          <AuthProtected>
             <ThemeProvider>{children}</ThemeProvider>
-          </AuthProtected>
 
           <footer>
             <Footer />
           </footer>
+          </AuthProtected>
         </Provider>
       </body>
     </html>
