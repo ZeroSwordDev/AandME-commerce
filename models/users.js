@@ -8,4 +8,11 @@ const UserSchema = new Schema({
   order: [{type: Schema.Types.ObjectId, ref: 'Order'}]
 });
 
-export default  UserSchema;
+
+const modelName = 'Users';
+
+const modelExists = mongoose.modelNames().includes(modelName);
+
+export default modelExists
+  ? mongoose.model(modelName) 
+  : mongoose.model(modelName, UserSchema);

@@ -5,6 +5,7 @@ import CheckoutForm from "@/components/CheckoutForm";
 import {  useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
+import ProductPayment from '../../components/ProductPayment'
 
 const page = () => {
 
@@ -26,6 +27,7 @@ const page = () => {
       </div>
       <div className=" w-full flex-1   flex justify-center items-center">
         <CheckoutForm cart={cart}/>
+        <ProductPayment/>
       </div>
     </div>
   );

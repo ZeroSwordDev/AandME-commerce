@@ -1,13 +1,12 @@
-import dbConnect from "@/libs/db";
+
+import users from "@/models/users";
 import { NextResponse } from "next/server";
 
 export const DELETE = async (request, { params }) => {
   try {
     const { id } = params;
 
-    const db = await dbConnect();
-
-    await db.user.findByIdAndDelete(id);
+    await users.findByIdAndDelete(id);
 
     return NextResponse.json("has been deleted!", { status: 200 });
   } catch (error) {
@@ -19,9 +18,8 @@ export const DELETE = async (request, { params }) => {
 export const PUT = async (request, { params }) => {
   try {
     const { fullname, Email, password } = await request.json();
-    const db = await dbConnect();
 
-    const Update = await db.user.findByIdAndUpdate(
+    const Update = await users.findByIdAndUpdate(
       params.id,
       { fullname, Email, password },
       { new: true }

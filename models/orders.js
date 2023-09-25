@@ -15,4 +15,11 @@ const orderSchema = new mongoose.Schema({
   },{ timestamps: true});
 
 
-  export default orderSchema;
+ 
+const modelName = 'Orders';
+
+const modelExists = mongoose.modelNames().includes(modelName);
+
+export default modelExists
+  ? mongoose.model(modelName) 
+  : mongoose.model(modelName, orderSchema);

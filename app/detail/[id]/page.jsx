@@ -7,21 +7,28 @@ import {
   Option,
   Select,
   Spinner,
-  Tab,
-  TabPanel,
-  Tabs,
-  TabsBody,
-  TabsHeader,
 } from "@material-tailwind/react";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { calculateSticker } from "@/libs/Calculate";
 
 const page = () => {
   const params = useParams();
   const _items = useSelector((state) => state.detailProduct.detailsProduct);
   const router = useRouter();
   const loading = useSelector((state) => state.detailProduct.loading);
+  const [calculate, setCalculateSticker] = useState(0);
+  const [itemOptions , setItemOptions] = useState({
+    name: "stickerConOption2",
+desc: "sticker 4 x4 100 unidadees",
+    price: 300,
+    options: ["64fd95a9f5795ca4a7b8f2e7", "64fd9834f5795ca4a7b8f34b"],
+    image: "https://www.creapublicidad.cl/wp-content/uploads/2020/07/pendones.png",
+    amount: ["3x3","4x4","5x5","6x6","7x7"],
+    size: ["300"],
+    uptime: ["3 dias habiles","5 DIAS HABILES"]
+  })
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -43,9 +50,44 @@ const page = () => {
   ];
 
   const newItems = { ..._items };
-  console.log(newItems);
-  const sizes = newItems.amount;
-  const amount = newItems.size;
+  const amount = newItems?.amount;
+  const uptime = newItems?.uptime;
+
+
+  const handleChangeCalculatorSticker = (e) => {
+    e.preventDefault();
+    const value = e.target.value;
+    if (value !== "") setCalculateSticker(calculateSticker(value));
+  };
+
+
+  const handleChangeOptions = (e) =>{
+
+  }
+  const selectOptions = (arr) => {
+    return (
+      <div className="w-full h-full  flex gap-3">
+        {arr?.map((element) => (
+          <div key={element.name} className=" w-full flex flex-col h-full gap-6">
+            <label htmlFor={element.name}>{element.name} </label>
+            <select
+              style={{
+                borderBottom: "1px solid black",
+              }}
+              id={element.name}
+            >
+              <option value={""}>Seleccionar</option>
+              {element?.values?.map((valueObj) => (
+                <option key={valueObj.value} value={valueObj.addprice}>
+                 { valueObj.value}
+                </option>
+              ))}
+            </select>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <>
@@ -71,28 +113,14 @@ const page = () => {
               <div className="flex flex-col w-full h-full justify-between">
                 <div className="">
                   <div className="flex w-full flex-col gap-6">
-                    <label htmlFor="">Tamaño</label>
-                    <select
-                      style={{
-                        borderBottom: "1px solid black",
-                      }}
-                    >
-                      {sizes?.map((item, index) => (
-                        <option key={index} value={item}>
-                          {item}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                <div className="">
-                  <div className="flex w-full flex-col gap-6">
                     <label htmlFor="">Cantidad</label>
                     <select
                       style={{
                         borderBottom: "1px solid black",
                       }}
+                      onChange={handleChangeCalculatorSticker}
                     >
+                      <option value=" ">Seleccionar</option>
                       {amount?.map((item, index) => (
                         <option key={index} value={item}>
                           {item}
@@ -103,63 +131,35 @@ const page = () => {
                 </div>
                 <div className="">
                   <div className="flex w-full flex-col gap-6">
-                    <Select
-                      variant="static"
-                      color="purple"
-                      labelProps={{
-                        style: {
-                          color: "black",
-                        },
-                      }}
-                      label="Tipo de Adhesivo"
-                    >
-                      <Option>Material Tailwind HTML</Option>
-                      <Option>Material Tailwind React</Option>
-                      <Option>Material Tailwind Vue</Option>
-                      <Option>Material Tailwind Angular</Option>
-                      <Option>Material Tailwind Svelte</Option>
-                    </Select>
-                  </div>
-                </div>
-                <div className="">
-                  <div className="flex w-full flex-col gap-6 ">
-                    <Select
-                      variant="static"
-                      color="purple"
-                      labelProps={{
-                        style: {
-                          color: "black",
-                        },
-                      }}
-                      label="Corte Entrega Final"
-                    >
-                      <Option>Material Tailwind HTML</Option>
-                      <Option>Material Tailwind React</Option>
-                      <Option>Material Tailwind Vue</Option>
-                      <Option>Material Tailwind Angular</Option>
-                      <Option>Material Tailwind Svelte</Option>
-                    </Select>
+                    <label htmlFor="">Tamaño</label>
+                    <input
+                      type="Number"
+                      disabled
+                      placeholder={`${calculate} Unidades`}
+                      className=" placeholder:text-black bg-transparent"
+                    />
                   </div>
                 </div>
                 <div className="">
                   <div className="flex w-full flex-col gap-6">
-                    <Select
-                      variant="static"
-                      color="purple"
-                      optio
-                      labelProps={{
-                        style: {
-                          color: "black",
-                        },
+                    {selectOptions(newItems?.options)}
+                  </div>
+                </div>
+                <div className="">
+                  <div className="flex w-full flex-col gap-6">
+                    <label htmlFor="">Tiempo de entrega</label>
+                    <select
+                      style={{
+                        borderBottom: "1px solid black",
                       }}
-                      label="Tiempo de producción"
                     >
-                      <Option>Material Tailwind HTML</Option>
-                      <Option>Material Tailwind React</Option>
-                      <Option>Material Tailwind Vue</Option>
-                      <Option>Material Tailwind Angular</Option>
-                      <Option>Material Tailwind Svelte</Option>
-                    </Select>
+                      <option value="">Seleccionar</option>
+                      {uptime?.map((item, index) => (
+                        <option key={index} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
 

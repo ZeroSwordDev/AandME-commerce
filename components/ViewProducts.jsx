@@ -1,10 +1,7 @@
-import { fetchGetAllCart } from "@/redux/cart/cartSlice";
-import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { AiOutlineEye, AiOutlineHeart } from "react-icons/ai";
-import { BsCartPlus } from "react-icons/bs";
+
 import { useDispatch } from "react-redux";
 
 const ViewProducts = ({ item }) => {
@@ -26,12 +23,12 @@ const ViewProducts = ({ item }) => {
           cursor={"pointer"}
           className=" p-1 hover:bg-white scale-x-95 rounded-full"
         />
-        <BsCartPlus
+{/*         <BsCartPlus
           size={40}
           cursor={"pointer"}
           className="p-1 hover:bg-white scale-x-95 rounded-full"
           onClick={() => dispatch(fetchGetAllCart(item))}
-        />
+        /> */}
       </div>
       <img src={item.image} alt="Descripción de la imagen" width="300" height="300" decoding="async" className="hover:opacity-70"/>
 
