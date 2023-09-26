@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
 const initialState = {
   detailsProduct: {},
   loading: false,
@@ -24,7 +23,8 @@ export const detailProductSlice = createSlice({
   },
 });
 
-export const { setDetailsProduct, setLoading , setError} = detailProductSlice.actions;
+export const { setDetailsProduct, setLoading, setError } =
+  detailProductSlice.actions;
 
 export const fetchDetailsProduct = (productId) => async (dispatch) => {
   try {
