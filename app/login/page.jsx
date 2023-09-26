@@ -7,14 +7,12 @@ import {
   Typography,
   Input,
   Checkbox,
-/*   Button, */
+  Button
 } from "@material-tailwind/react";
-import  Button  from 'library-aandm/src/index'
-import { signIn, signOut, useSession } from "next-auth/react";
-import { redirect } from 'next/navigation'
-import { useEffect, useState } from "react";
-export default function page() {
+import { signIn } from "next-auth/react";
+import { useState } from "react";
 
+export default function page() {
   const [credetials, setCredetials] = useState({
     Email: "",
   });
@@ -29,7 +27,7 @@ export default function page() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-   await signIn("credentials", { Email, callbackUrl: '/dashboard/home' })
+   await signIn("credentials", { Email, callbackUrl: '/' })
   };
 
  /*  useEffect(() => {console.log(hola)}, []); */

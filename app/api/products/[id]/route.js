@@ -1,12 +1,20 @@
-import dbConnect from "@/libs/db";
+import prisma from "@/libs/db";
 import { NextResponse } from "next/server";
 
 export const GET = async (request, { params }) => {
   try {
     /* GET ALL PRODUCTS */
     const { id } = params;
-    const db = await dbConnect();
-    const products = await db.products.findById(id);
+
+    const products = await prisma.product.findMany({
+      where: { id },
+      include: {
+        options: true,
+        uptime:true,
+        size:true
+      }
+    });
+
 
     return NextResponse.json(products, { status: 200 });
   } catch (error) {
@@ -19,8 +27,7 @@ export const PUT = async (request, { params }) => {
     /* PUT ONE PRODUCTS */
     const productUp = await request.json();
     const { id } = params;
-    const db = await dbConnect();
-    const productsUPDATE = await db.products.findByIdAndUpdate(id, productUp, {
+    const productsUPDATE = await products.findByIdAndUpdate(id, productUp, {
       new: true,
     });
 
@@ -34,8 +41,7 @@ export const DELETE = async (request, { params }) => {
   try {
     /* DELETE ONE PRODUCTS */
     const { id } = params;
-    const db = await dbConnect();
-    await db.products.findByIdAndDelete(id);
+    await products.findByIdAndDelete(id);
 
     return NextResponse.json("Product has been deleted!", { status: 200 });
   } catch (error) {
