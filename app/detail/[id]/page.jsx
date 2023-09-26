@@ -4,8 +4,6 @@ import { RiArrowLeftSLine } from "react-icons/ri";
 import {
   Button,
   Carousel,
-  Option,
-  Select,
   Spinner,
 } from "@material-tailwind/react";
 import { useParams, useRouter } from "next/navigation";
@@ -18,53 +16,31 @@ const page = () => {
   const _items = useSelector((state) => state.detailProduct.detailsProduct);
   const router = useRouter();
   const loading = useSelector((state) => state.detailProduct.loading);
-  const [calculate, setCalculateSticker] = useState(0);
-  const [itemOptions , setItemOptions] = useState({
-    name: "stickerConOption2",
-desc: "sticker 4 x4 100 unidadees",
-    price: 300,
-    options: ["64fd95a9f5795ca4a7b8f2e7", "64fd9834f5795ca4a7b8f34b"],
-    image: "https://www.creapublicidad.cl/wp-content/uploads/2020/07/pendones.png",
-    amount: ["3x3","4x4","5x5","6x6","7x7"],
-    size: ["300"],
-    uptime: ["3 dias habiles","5 DIAS HABILES"]
-  })
+  const [sizeTotal, setSizeTotal] = useState(0);
+
+
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchDetailsProduct(params.id));
   }, [params.id]);
 
-  const data = [
-    {
-      label: "Description",
-      value: "html",
-      desc: `Promociona la imagen de tu empresa de forma divertida y creativa a través de etiquetas adhesivas que aportan gran calidad a los productos que las llevan.  
 
-      - Impresión UV  alta de alta calidad.
-      - Tinta UV impresa en adhesivo.
-      - Mínimo 1 diseño por pliego de impresión. 
-      - El valor no incluye elaboración de diseño, ni modificaciones. 
-      - Usos sugeridos:  uso intemperie, muros, vidrios, frascos, cajas empaques.`,
-    },
-  ];
+  const newItems = { ..._items[0] };
 
-  const newItems = { ..._items };
-  const amount = newItems?.amount;
+  console.log(newItems)
+  const size = newItems?.size;
   const uptime = newItems?.uptime;
 
 
   const handleChangeCalculatorSticker = (e) => {
     e.preventDefault();
     const value = e.target.value;
-    if (value !== "") setCalculateSticker(calculateSticker(value));
+    setSizeTotal(value)
   };
 
 
-  const handleChangeOptions = (e) =>{
-
-  }
-  const selectOptions = (arr) => {
+ /*  const selectOptions = (arr) => {
     return (
       <div className="w-full h-full  flex gap-3">
         {arr?.map((element) => (
@@ -87,7 +63,7 @@ desc: "sticker 4 x4 100 unidadees",
         ))}
       </div>
     );
-  };
+  }; */
 
   return (
     <>
@@ -98,12 +74,12 @@ desc: "sticker 4 x4 100 unidadees",
       ) : (
         <div className=" max-w-[1440px] mx-auto h-full  p-3">
           <RiArrowLeftSLine cursor={"pointer"} onClick={() => router.back()} />
-          <h2 className=" text-2xl m-7">{_items.name}</h2>
+          <h2 className=" text-2xl m-7">{newItems?.name}</h2>
           <div className="flex p-1 gap-6 ">
             <div className="w-[700px] h-[500px] flex-1">
               <Carousel className="rounded-xl h-ful w-full">
                 <img
-                  src={_items?.image}
+                  src={newItems?.image}
                   alt="image 1"
                   className="h-full w-full object-contain "
                 />
@@ -121,9 +97,9 @@ desc: "sticker 4 x4 100 unidadees",
                       onChange={handleChangeCalculatorSticker}
                     >
                       <option value=" ">Seleccionar</option>
-                      {amount?.map((item, index) => (
-                        <option key={index} value={item}>
-                          {item}
+                      {size?.map((item, index) => (
+                        <option key={index} value={item?.size}>
+                          {item?.amount}
                         </option>
                       ))}
                     </select>
@@ -135,14 +111,14 @@ desc: "sticker 4 x4 100 unidadees",
                     <input
                       type="Number"
                       disabled
-                      placeholder={`${calculate} Unidades`}
+                      placeholder={`${sizeTotal} Unidades`}
                       className=" placeholder:text-black bg-transparent"
                     />
                   </div>
                 </div>
                 <div className="">
                   <div className="flex w-full flex-col gap-6">
-                    {selectOptions(newItems?.options)}
+                    {/* {selectOptions(newItems?.options)} */}
                   </div>
                 </div>
                 <div className="">
@@ -156,7 +132,7 @@ desc: "sticker 4 x4 100 unidadees",
                       <option value="">Seleccionar</option>
                       {uptime?.map((item, index) => (
                         <option key={index} value={item}>
-                          {item}
+                          {item?.name}
                         </option>
                       ))}
                     </select>
@@ -164,7 +140,7 @@ desc: "sticker 4 x4 100 unidadees",
                 </div>
 
                 <div className="flex flex-col w-full justify-end items-end ">
-                  <h5>TOTAL: $ {_items.price}</h5>
+                 {/*  <h5>TOTAL: $ {_item.price}</h5> */}
                   <p className="font-bold">Precio unitario:$ 234</p>
                 </div>
               </div>
@@ -176,7 +152,7 @@ desc: "sticker 4 x4 100 unidadees",
                 <h3>Descripcion</h3>
               </div>
               <div className="w-full h-full p-4 ">
-                <p>{_items.desc}</p>
+                <p>{newItems?.desc}</p>
               </div>
             </div>
             <div className="flex items-center justify-center flex-col flex-1 w-full h-full gap-3">

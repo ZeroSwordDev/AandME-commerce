@@ -1,13 +1,22 @@
-import products from "@/models/products";
+import prisma from "@/libs/db";
 import { NextResponse } from "next/server";
 
 export const GET = async (request, { params }) => {
   try {
     /* GET ALL PRODUCTS */
     const { id } = params;
-    const product = await products.findById(id).populate('options');
 
-    return NextResponse.json(product, { status: 200 });
+    const products = await prisma.product.findMany({
+      where: { id },
+      include: {
+        options: true,
+        uptime:true,
+        size:true
+      }
+    });
+
+
+    return NextResponse.json(products, { status: 200 });
   } catch (error) {
     return NextResponse.json("dataBase not found Users", { status: 501 });
   }

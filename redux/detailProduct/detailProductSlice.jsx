@@ -31,6 +31,7 @@ export const fetchDetailsProduct = (productId) => async (dispatch) => {
     dispatch(setLoading(true));
     const res = await fetch(`/api/products/${productId}`);
     const data = await res.json();
+    console.log(data)
     dispatch(setDetailsProduct(data));
   } catch (error) {
     dispatch(setError(true));
