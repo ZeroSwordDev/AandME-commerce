@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
 const initialState = {
   detailsProduct: {},
   loading: false,
@@ -24,14 +23,14 @@ export const detailProductSlice = createSlice({
   },
 });
 
-export const { setDetailsProduct, setLoading , setError} = detailProductSlice.actions;
+export const { setDetailsProduct, setLoading, setError } =
+  detailProductSlice.actions;
 
 export const fetchDetailsProduct = (productId) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const res = await fetch(`/api/products/${productId}`);
     const data = await res.json();
-    console.log(data)
     dispatch(setDetailsProduct(data));
   } catch (error) {
     dispatch(setError(true));

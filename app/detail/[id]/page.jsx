@@ -1,15 +1,10 @@
 "use client";
 import { fetchDetailsProduct } from "@/redux/detailProduct/detailProductSlice";
 import { RiArrowLeftSLine } from "react-icons/ri";
-import {
-  Button,
-  Carousel,
-  Spinner,
-} from "@material-tailwind/react";
+import { Button, Carousel, Spinner } from "@material-tailwind/react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { calculateSticker } from "@/libs/Calculate";
 
 const page = () => {
   const params = useParams();
@@ -17,45 +12,49 @@ const page = () => {
   const router = useRouter();
   const loading = useSelector((state) => state.detailProduct.loading);
   const [sizeTotal, setSizeTotal] = useState(0);
-
-
+  const [acumulateItems, setAcumulateItems] = useState([]);
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchDetailsProduct(params.id));
   }, [params.id]);
 
-
   const newItems = { ..._items[0] };
-
-  console.log(newItems)
-  const size = newItems?.size;
-  const uptime = newItems?.uptime;
-
 
   const handleChangeCalculatorSticker = (e) => {
     e.preventDefault();
     const value = e.target.value;
-    setSizeTotal(value)
+    setSizeTotal(value);
   };
+  const handleChangeTotalprice = async (e) => {
+    e.preventDefault();
+    const value = e.target.value;
+    const findSelected = newItems?.Option?.find((p) => p.id === value);
 
+    setAcumulateItems((prev) => [...prev, { findSelected }]);
+  };
+  console.log(acumulateItems);
 
- /*  const selectOptions = (arr) => {
+  const selectOptions = (arr) => {
     return (
       <div className="w-full h-full  flex gap-3">
         {arr?.map((element) => (
-          <div key={element.name} className=" w-full flex flex-col h-full gap-6">
+          <div
+            key={element.name}
+            className=" w-full flex flex-col h-full gap-6"
+          >
             <label htmlFor={element.name}>{element.name} </label>
             <select
               style={{
                 borderBottom: "1px solid black",
               }}
               id={element.name}
+              onChange={handleChangeTotalprice}
             >
               <option value={""}>Seleccionar</option>
-              {element?.values?.map((valueObj) => (
-                <option key={valueObj.value} value={valueObj.addprice}>
-                 { valueObj.value}
+              {element?.values?.map((valueObj, i) => (
+                <option key={i} value={element.id}>
+                  {valueObj.value}
                 </option>
               ))}
             </select>
@@ -63,7 +62,7 @@ const page = () => {
         ))}
       </div>
     );
-  }; */
+  };
 
   return (
     <>
@@ -89,7 +88,7 @@ const page = () => {
               <div className="flex flex-col w-full h-full justify-between">
                 <div className="">
                   <div className="flex w-full flex-col gap-6">
-                    <label htmlFor="">Cantidad</label>
+                    <label htmlFor="">Tamaño</label>
                     <select
                       style={{
                         borderBottom: "1px solid black",
@@ -97,7 +96,7 @@ const page = () => {
                       onChange={handleChangeCalculatorSticker}
                     >
                       <option value=" ">Seleccionar</option>
-                      {size?.map((item, index) => (
+                      {newItems?.Size?.map((item, index) => (
                         <option key={index} value={item?.size}>
                           {item?.amount}
                         </option>
@@ -107,7 +106,7 @@ const page = () => {
                 </div>
                 <div className="">
                   <div className="flex w-full flex-col gap-6">
-                    <label htmlFor="">Tamaño</label>
+                    <label htmlFor="">Cantidad</label>
                     <input
                       type="Number"
                       disabled
@@ -118,7 +117,7 @@ const page = () => {
                 </div>
                 <div className="">
                   <div className="flex w-full flex-col gap-6">
-                    {/* {selectOptions(newItems?.options)} */}
+                    {selectOptions(newItems?.Option)}
                   </div>
                 </div>
                 <div className="">
@@ -130,8 +129,8 @@ const page = () => {
                       }}
                     >
                       <option value="">Seleccionar</option>
-                      {uptime?.map((item, index) => (
-                        <option key={index} value={item}>
+                      {newItems?.Uptime?.map((item, index) => (
+                        <option key={index} value={item?.agg}>
                           {item?.name}
                         </option>
                       ))}
@@ -140,7 +139,7 @@ const page = () => {
                 </div>
 
                 <div className="flex flex-col w-full justify-end items-end ">
-                 {/*  <h5>TOTAL: $ {_item.price}</h5> */}
+                  {/*    <h5>TOTAL: ${pricetotal ? pricetotal : newItems?.price}</h5> */}
                   <p className="font-bold">Precio unitario:$ 234</p>
                 </div>
               </div>

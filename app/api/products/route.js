@@ -3,13 +3,7 @@ import { NextResponse } from "next/server";
 
 export const GET = async (request) => {
   try {
-  
-    const products = await prisma.product.findMany({
-      include: {
-        options: true,
-      },
-    });
-
+    const products = await prisma.product.findMany();
 
     return NextResponse.json(products, { status: 200 });
   } catch (error) {
@@ -20,11 +14,11 @@ export const GET = async (request) => {
 
 export const POST = async (request) => {
   try {
-      const items = await request.json();
+    const items = await request.json();
 
     const products = await prisma.Product.create({
-      data: items 
-    })
+      data: items,
+    });
 
     return NextResponse.json(products, { status: 200 });
   } catch (error) {
