@@ -7,44 +7,126 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id         String    @id @default(uuid()) @map("_id")
+  fullname   String
+  phone      String?
+  email      String    @unique
+  password   String
+  region     String
+  city       String
+  enabled    Boolean   @default(false)
+  admin      Boolean   @default(false)
+  points     Int       @default(0)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  review     Rewiews[]
+}
+
 model Product {
-  id     String  @id @default(uuid()) @map("_id")
-  name   String
-  desc   String
-  price  Int
-  image  String
-  amount String?
+  id    String @id @default(uuid()) @map("_id")
+  name  String
+  desc  String
+  price Int
+  image String
 
-  sizeId String[]
-  Size   Size[]   @relation(fields: [sizeId], references: [id])
+  sizeIds String[] @default([])
+  Size    Size[]   @relation(fields: [sizeIds], references: [id])
 
-  uptimeid String[]
+  uptimeid String[] @default([])
   Uptime   Uptime[] @relation(fields: [uptimeid], references: [id])
 
-  optionsId String[]
-  Option    Option[] @relation(fields: [optionsId], references: [id])
+  Option    Options[] @relation(fields: [optionsId], references: [id])
+  optionsId String[]  @default([])
+
+  Reviews   Rewiews[] @relation(fields: [reviewIds], references: [id])
+  reviewIds String[]  @default([])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Rewiews {
+  id         String @id @default(uuid()) @map("_id")
+  comment    String
+  valoration Float
+
+  userId String
+  User   User   @relation(fields: [userId], references: [id])
+
+  Product   Product[] @relation(fields: [reviewIds], references: [id])
+  reviewIds String[]
 }
 
 model Size {
-  id        String    @id @default(uuid()) @map("_id")
-  amount    String
-  size      Int       @default(0)
-  Product   Product[] @relation(fields: [productId], references: [id])
-  productId String[]
+  id         String  @id @default(uuid()) @map("_id")
+  height     String?
+  width      String?
+  value      String?
+  price      Int     @default(0)
+  quantity   Int     @default(0)
+  optionview String  @default("cantidadExacta")
+
+  productids String[]
+  Product    Product[] @relation(fields: [productids], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model Uptime {
-  id        String    @id @default(uuid()) @map("_id")
-  name      String
-  agg       Int       @default(0)
-  products  Product[] @relation(fields: [productId], references: [id])
+  id    String @id @default(uuid()) @map("_id")
+  name  String
+  price Int    @default(0)
+
   productId String[]
+  Product   Product[] @relation(fields: [productId], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
-model Option {
-  id         String    @id @default(uuid()) @map("_id")
-  name       String    @unique
-  values     Json[]
-  productsId String[] 
-  Product    Product[] @relation(fields: [productsId], references: [id])
+model Options {
+  id   String @id @default(uuid()) @map("_id")
+  name String @unique
+
+  Products   Product[] @relation(fields: [productsId], references: [id])
+  productsId String[]
+
+  optionsAll         OthersOptions[] @relation(fields: [aditionalOptionsId], references: [id])
+  aditionalOptionsId String[]
+
+  manufacturing    Manufacturing[] @relation(fields: [manufacturingIds], references: [id])
+  manufacturingIds String[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Manufacturing {
+  id    String  @id @default(uuid()) @map("_id")
+  name  String
+  price Int     @default(0)
+  stock Int     @default(0)
+  m2    Int?
+  desc  String?
+  img   String?
+
+  Option    Options[] @relation(fields: [optionIds], references: [id])
+  optionIds String[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model OthersOptions {
+  id    String @id @default(uuid()) @map("_id")
+  name  String
+  price Int
+
+  Option    Options[] @relation(fields: [optionIds], references: [id])
+  optionIds String[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }

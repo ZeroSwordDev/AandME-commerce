@@ -1,13 +1,25 @@
 import prisma from "@/libs/db";
 import { NextResponse } from "next/server";
 
-export const POST = async (request) => {
+export const PUT = async (request, { params }) => {
   const data = await request.json();
+  const { id } = params;
+
   try {
-    const newSizes = await prisma.Size.create({
+    await prisma.Size.updateMany({
+      where: {
+        id: id,
+      },
       data: data,
     });
-    return NextResponse.json(newSizes, { status: 200 });
+
+    const updatedRecords = await prisma.Size.findMany({
+      where: {
+        id: id,
+      },
+    });
+
+    return NextResponse.json(updatedRecords, { status: 200 });
   } catch (error) {
     console.log(error);
     return NextResponse.json("No puedes crear un tamaño", { status: 200 });

@@ -13,6 +13,10 @@ const page = () => {
   const loading = useSelector((state) => state.detailProduct.loading);
   const [sizeTotal, setSizeTotal] = useState(0);
   const [acumulateItems, setAcumulateItems] = useState([]);
+  const [dataOption, setDataOption] = useState({
+    optionSelected: acumulateItems,
+    uptimeSelected: {},
+  });
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -26,14 +30,35 @@ const page = () => {
     const value = e.target.value;
     setSizeTotal(value);
   };
+
+  useEffect(() => {
+    // Aquí puedes realizar acciones adicionales cuando acumulateItems cambie.
+    console.log(acumulateItems);
+  }, [acumulateItems]);
+
   const handleChangeTotalprice = async (e) => {
     e.preventDefault();
     const value = e.target.value;
-    const findSelected = newItems?.Option?.find((p) => p.id === value);
+    const findSelected = newItems?.Option[0].values?.find(
+      (v) => v.value === value
+    );
 
-    setAcumulateItems((prev) => [...prev, { findSelected }]);
+    if (value !== "") {
+      const exist = acumulateItems.some((p) => p.name === findSelected.value);
+      if (!exist) {
+        setAcumulateItems([
+          {
+            option: {
+              name: findSelected.value,
+              addprice: findSelected.addprice,
+            },
+          },
+        ]);
+      }
+    } else {
+      setAcumulateItems([]);
+    }
   };
-  console.log(acumulateItems);
 
   const selectOptions = (arr) => {
     return (
@@ -53,7 +78,7 @@ const page = () => {
             >
               <option value={""}>Seleccionar</option>
               {element?.values?.map((valueObj, i) => (
-                <option key={i} value={element.id}>
+                <option key={i} value={valueObj.value}>
                   {valueObj.value}
                 </option>
               ))}

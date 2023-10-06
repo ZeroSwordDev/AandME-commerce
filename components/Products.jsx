@@ -19,9 +19,9 @@ const Products = () => {
       {/* <ViewProducts /> */}
       {!loading ? (
         <div className="grid grid-cols-7 w-full h-full  mb-7 gap-2">
-          {products?.map((item, _) => (
+          {/* {products?.map((item, _) => (
             <ViewProducts key={_} item={item} />
-          ))}
+          ))} */}
         </div>
       ) : (
         <div className="w-full h-[200px] flex items-center justify-center">
