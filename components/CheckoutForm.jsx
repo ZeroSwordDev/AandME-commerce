@@ -46,7 +46,7 @@ function CheckoutForm(value) {
       userId:'64c03f927900fb183dda7a57',
       deliveryMethod: data.deliveryMethod,
     })
-    console.log(res)
+   
   }
   return (
     <div className="w-full flex items-center justify-center overflow-hidden ">

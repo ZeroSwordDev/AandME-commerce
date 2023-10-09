@@ -37,11 +37,14 @@ export const PUT = async (request, { params }) => {
 
 export const DELETE = async (request, { params }) => {
   try {
-    /* DELETE ONE PRODUCTS */
     const { id } = params;
-    await products.findByIdAndDelete(id);
 
-    return NextResponse.json("Product has been deleted!", { status: 200 });
+    await prisma.product.delete({
+      where: {
+        id,
+      },
+    });
+    return NextResponse.json(id, { status: 200 });
   } catch (error) {
     return NextResponse.json("dataBase not found Users", { status: 501 });
   }

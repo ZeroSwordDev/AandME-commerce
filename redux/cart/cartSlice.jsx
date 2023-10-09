@@ -68,7 +68,6 @@ export const fetchGetAllCart = (product) => async (dispatch) => {
 
 export const deleteOneCart = (id) => async (dispatch) => {
   try {
-    console.log(id);
     dispatch(deleteCartOne(id));
   } catch (error) {
     console.log(error);

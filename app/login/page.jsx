@@ -30,7 +30,7 @@ export default function page() {
    await signIn("credentials", { Email, callbackUrl: '/' })
   };
 
- /*  useEffect(() => {console.log(hola)}, []); */
+
   return (
     <div className="flex h-screen items-center justify-center">
       <form onSubmit={handleSubmit}>

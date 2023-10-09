@@ -31,6 +31,6 @@ export const calculateSticker = (SelectedOption) => {
   }
 
 
-  console.log(stickerPrice)
+ 
   return stickerPrice;
 };
