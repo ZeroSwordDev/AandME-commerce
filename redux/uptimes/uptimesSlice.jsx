@@ -1,17 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  options: [],
+  uptimes: [],
   loading: false,
   error: false,
 };
 
-export const optionsSlice = createSlice({
-  name: "options",
+export const uptimesSlice = createSlice({
+  name: "uptimes",
   initialState,
   reducers: {
-    setGetallOptions: (state, action) => {
-      state.options = action.payload;
+    setGetallUptimes: (state, action) => {
+      state.uptimes = action.payload;
     },
     setLoading: (state, action) => {
       state.loading = action.payload;
@@ -19,11 +19,11 @@ export const optionsSlice = createSlice({
     setError: (state, action) => {
       state.error = action.payload;
     },
-    setGetAddOptions: (state, action) => {
-      state.options = [...state.options, action.payload];
+    setGetAddUptimes: (state, action) => {
+      state.uptimes = [...state.uptimes, action.payload];
     },
-    setDeleteOptions: (state, action) => {
-      state.options = state.options.filter(
+    setDeleteUptimes: (state, action) => {
+      state.uptimes = state.uptimes.filter(
         (item) => item.id !== action.payload
       );
     },
@@ -31,19 +31,19 @@ export const optionsSlice = createSlice({
 });
 
 export const {
-  setDeleteOptions,
-  setGetAddOptions,
-  setGetallOptions,
+  setDeleteUptimes,
+  setGetAddUptimes,
+  setGetallUptimes,
   setLoading,
   setError,
-} = optionsSlice.actions;
+} = uptimesSlice.actions;
 
-export const fetchGetAllOptions = () => async (dispatch) => {
+export const fetchGetAllUptimes = () => async (dispatch) => {
   try {
     dispatch(setLoading(true));
-    const res = await fetch(`/api/options`);
+    const res = await fetch(`/api/uptime`);
     const data = await res.json();
-    dispatch(setGetallOptions(data));
+    dispatch(setGetallUptimes(data));
   } catch (error) {
     dispatch(setError(true));
     console.log(error);
@@ -52,16 +52,17 @@ export const fetchGetAllOptions = () => async (dispatch) => {
   }
 };
 
-export const fetchGetAddOptions = (data) => async (dispatch) => {
+export const fetchGetAddUptimes = (data) => async (dispatch) => {
+  console.log(data)
   try {
     dispatch(setLoading(true));
-    const res = await fetch(`/api/options`, {
+    const res = await fetch(`/api/uptime`, {
       method: "POST",
       body: JSON.stringify(data),
     });
 
     const resposne = await res.json();
-    dispatch(setGetAddOptions(data));
+    dispatch(setGetAddUptimes(resposne));
   } catch (error) {
     dispatch(setError(true));
     console.log(error);
@@ -70,16 +71,15 @@ export const fetchGetAddOptions = (data) => async (dispatch) => {
   }
 };
 
-export const fetchDeleteOptions = (id) => async (dispatch) => {
-  console.log(id)
+export const fetchDeleteUptimes = (id) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
-    const res = await fetch(`/api/options/${id}`, {
+    const res = await fetch(`/api/uptime/${id}`, {
       method: "DELETE",
     });
 
     await res.json();
-    dispatch(setDeleteOptions(id));
+    dispatch(setDeleteUptimes(id));
   } catch (error) {
     dispatch(setError(true));
     console.log(error);
@@ -88,4 +88,4 @@ export const fetchDeleteOptions = (id) => async (dispatch) => {
   }
 };
 
-export default optionsSlice.reducer;
+export default uptimesSlice.reducer;

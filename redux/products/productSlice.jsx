@@ -28,10 +28,16 @@ export const productSlice = createSlice({
         (item) => item.id !== action.payload
       );
     },
+    setChangeProducts: (state,action) => {
+      state.products = state.products.filter(
+        (item) => item.id !== action.payload
+      );
+    }
   },
 });
 
 export const {
+  setChangeProducts,
   setUpdateProducts,
   setDeleteProducts,
   setGetallProduct,
@@ -85,5 +91,23 @@ export const fetchDeleteProduct = (id) => async (dispatch) => {
     dispatch(setLoading(false));
   }
 };
+
+
+export const fetchUpdateProduct = (id) => async (dispatch) => {
+  try {
+    dispatch(setLoading(true));
+    const res = await fetch(`/api/products/${id}`, {
+      method: "DELETE",
+    });
+     await res.json();
+    dispatch(setChangeProducts(id));
+  } catch (error) {
+    dispatch(setError(true));
+    console.log(error);
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+
 
 export default productSlice.reducer;

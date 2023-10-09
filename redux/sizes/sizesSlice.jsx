@@ -1,17 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  options: [],
+  sizes: [],
   loading: false,
   error: false,
 };
 
-export const optionsSlice = createSlice({
-  name: "options",
+export const sizesSlice = createSlice({
+  name: "sizes",
   initialState,
   reducers: {
-    setGetallOptions: (state, action) => {
-      state.options = action.payload;
+    setGetallSizes: (state, action) => {
+      state.sizes = action.payload;
     },
     setLoading: (state, action) => {
       state.loading = action.payload;
@@ -19,11 +19,11 @@ export const optionsSlice = createSlice({
     setError: (state, action) => {
       state.error = action.payload;
     },
-    setGetAddOptions: (state, action) => {
-      state.options = [...state.options, action.payload];
+    setGetAddSizes: (state, action) => {
+      state.sizes = [...state.sizes, action.payload];
     },
-    setDeleteOptions: (state, action) => {
-      state.options = state.options.filter(
+    setDeleteSizes: (state, action) => {
+      state.sizes = state.sizes.filter(
         (item) => item.id !== action.payload
       );
     },
@@ -31,19 +31,19 @@ export const optionsSlice = createSlice({
 });
 
 export const {
-  setDeleteOptions,
-  setGetAddOptions,
-  setGetallOptions,
+  setDeleteSizes,
+  setGetAddSizes,
+  setGetallSizes,
   setLoading,
   setError,
-} = optionsSlice.actions;
+} = sizesSlice.actions;
 
-export const fetchGetAllOptions = () => async (dispatch) => {
+export const fetchGetAllSizes = () => async (dispatch) => {
   try {
     dispatch(setLoading(true));
-    const res = await fetch(`/api/options`);
+    const res = await fetch(`/api/sizes`);
     const data = await res.json();
-    dispatch(setGetallOptions(data));
+    dispatch(setGetallSizes(data));
   } catch (error) {
     dispatch(setError(true));
     console.log(error);
@@ -52,16 +52,17 @@ export const fetchGetAllOptions = () => async (dispatch) => {
   }
 };
 
-export const fetchGetAddOptions = (data) => async (dispatch) => {
+export const fetchGetAddSizes = (data) => async (dispatch) => {
+  console.log(data)
   try {
     dispatch(setLoading(true));
-    const res = await fetch(`/api/options`, {
+    const res = await fetch(`/api/sizes`, {
       method: "POST",
       body: JSON.stringify(data),
     });
 
     const resposne = await res.json();
-    dispatch(setGetAddOptions(data));
+    dispatch(setGetAddSizes(resposne));
   } catch (error) {
     dispatch(setError(true));
     console.log(error);
@@ -70,16 +71,15 @@ export const fetchGetAddOptions = (data) => async (dispatch) => {
   }
 };
 
-export const fetchDeleteOptions = (id) => async (dispatch) => {
-  console.log(id)
+export const fetchDeleteSizes = (id) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
-    const res = await fetch(`/api/options/${id}`, {
+    const res = await fetch(`/api/sizes/${id}`, {
       method: "DELETE",
     });
 
     await res.json();
-    dispatch(setDeleteOptions(id));
+    dispatch(setDeleteSizes(id));
   } catch (error) {
     dispatch(setError(true));
     console.log(error);
@@ -88,4 +88,4 @@ export const fetchDeleteOptions = (id) => async (dispatch) => {
   }
 };
 
-export default optionsSlice.reducer;
+export default sizesSlice.reducer;

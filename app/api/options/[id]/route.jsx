@@ -43,3 +43,20 @@ export const GET = async (request, { params }) => {
     return NextResponse.json("Server Error", { status: 500 });
   }
 };
+
+
+export const DELETE = async (request, { params }) => {
+  const { id } = params;
+  try {
+    const findOneOption = await prisma.Options.deleteMany({
+      where: {
+        id
+      }
+    });
+
+    return NextResponse.json('Has been deleted Sucefully!', { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json("Server Error", { status: 500 });
+  }
+};

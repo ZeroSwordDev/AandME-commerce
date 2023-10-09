@@ -36,3 +36,18 @@ export const GET = async (request) => {
     return NextResponse.json("No puedes VER LOS tamañoS", { status: 500 });
   }
 };
+
+
+export const DELETE = async (request, {params}) => {
+  const { id } = params;
+  try {
+     await prisma.Size.deleteMany({
+      where: {id}
+    });
+
+    return NextResponse.json('Has been deleted Sucefully!', { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json("No puedes VER LOS tamañoS", { status: 500 });
+  }
+};

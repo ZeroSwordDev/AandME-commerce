@@ -25,9 +25,12 @@ export const PUT = async (request, { params }) => {
     /* PUT ONE PRODUCTS */
     const productUp = await request.json();
     const { id } = params;
-    const productsUPDATE = await products.findByIdAndUpdate(id, productUp, {
-      new: true,
-    });
+     await prisma.product.updateMany(
+      { where: id , data: productUp }
+    )
+
+    const productsUPDATE = prisma.product.findMany();
+
 
     return NextResponse.json(productsUPDATE, { status: 200 });
   } catch (error) {

@@ -6,147 +6,100 @@ import {
   DialogBody,
   DialogFooter,
   Input,
-  Select,
-  Option,
   Card,
   Typography,
-  Textarea,
 } from "@material-tailwind/react";
-import {
-  fetchAddProduct,
-  fetchDeleteProduct,
-  fetchGetAllProduct,
-} from "@/redux/products/productSlice";
 import { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchGetAllOptions } from "@/redux/options/optionSlice";
+import { fetchDeleteSizes, fetchGetAddSizes, fetchGetAllSizes } from "@/redux/sizes/sizesSlice";
 
-const AddProduct = () => {
-  const TABLE_HEAD = ["Name", "desription", "price", "image", "options"];
+const AddSizes = () => {
+  const TABLE_HEAD = ["Tamaño", "Price", "Cantidad", "Options"];
   const [isOpen, setIsOpen] = useState(false);
   const handleOpen = () => setIsOpen(!isOpen);
   const dispatch = useDispatch();
-  const [valueOptions, setValueOptions] = useState([]);
 
-  const [data, setdata] = useState({
-    name: "",
-    desc: "",
+  const [dataOptions, setDataOptions] = useState({
+    height: '',
+    width: '',
+    value: '',
     price: 0,
-    image: "",
-    /*   sizeIds: [], */
-    /*   uptimeid: [], */
-    optionsId: [...valueOptions],
-    /*  reviewIds: [], */
+    quantity: 0,
+    optionview: 'cantidadExacta',
   });
-  const products = useSelector((state) => state.product.products);
-  const options = useSelector((state) => state.option.options);
+
+  const sizes = useSelector((state) => state.sizes.sizes);
 
   useEffect(() => {
-    dispatch(fetchGetAllProduct());
-    dispatch(fetchGetAllOptions());
-  }, [products.length]);
+    dispatch(fetchGetAllSizes());
+  }, [sizes.length]);
 
   const changeDataProduct = (e) => {
     e.preventDefault();
 
-    setdata({
-      ...data,
+    setDataOptions({
+      ...dataOptions,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleChangeOptions = (Selected) => {
-    const exist = valueOptions.find((p) => p === Selected);
-    if (Selected !== "") {
-      if (!exist) {
-        setValueOptions((prev) => [...prev, Selected]);
-      } else {
-        setValueOptions(valueOptions.filter((item) => item !== Selected));
-      }
-    }
-    return;
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    dispatch(fetchAddProduct(data));
+    dispatch(fetchGetAddSizes({...dataOptions, price: Number(dataOptions.price),quantity: Number(dataOptions.quantity) }));
+    setDataOptions({
+      height: '',
+      width: '',
+      value: '',
+      price: 0,
+      quantity: 0,
+      optionview: 'cantidadExacta',
+    });
   };
 
   return (
     <>
       {/* MODAL */}
       <Dialog open={isOpen} size={"lg"} handler={handleOpen}>
-        <DialogHeader>Agregar Producto </DialogHeader>
+        <DialogHeader>Agregar Tamaños </DialogHeader>
         <form onSubmit={handleSubmit} className="h-full">
           <DialogBody divider className="flex w-full h-full flex-col ">
             <div className="flex   items-start gap-6 h-full w-full">
               <div className="flex-1 flex w-full justify-around   gap-4 flex-col h-full ">
-                <Input label="Name" name="name" onChange={changeDataProduct} />
-                <Textarea
-                  label="Description"
-                  name="desc"
+                <Input
+                  label="Height"
+                  name="height"
                   onChange={changeDataProduct}
                 />
                 <Input
-                  label="Price"
+                  label="Width"
+                  name="width"
+                  onChange={changeDataProduct}
+                />
+                <Input
+                  label="Value"
+                  name="value"
+                  onChange={changeDataProduct}
+                />
+                <Input
                   type="number"
+                  label="Price"
                   name="price"
                   onChange={changeDataProduct}
                 />
-                <div className="relative flex w-full ">
-                  <Input
-                    label="Image"
-                    className="pr-20 w-full"
-                    containerProps={{
-                      className: "min-w-0",
-                    }}
-                    name="image"
-                    onChange={changeDataProduct}
-                  />
-                  <Button
-                    size="sm"
-                    color={"gray"}
-                    className="!absolute right-1 top-1 rounded"
-                  >
-                    Add
-                  </Button>
-                </div>
-              </div>
-              <div className="flex-1 gap-4 flex flex-col">
-                <img
-                  className="h-full w-full rounded-full object-cover object-center"
-                  src="https://images.unsplash.com/photo-1682407186023-12c70a4a35e0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2832&q=80"
-                  alt="nature image"
+                <Input
+                  type="number"
+                  label="Quantity"
+                  name="quantity"
+                  onChange={changeDataProduct}
+                />
+                <Input
+                  label="Optionview"
+                  name="optionview"
+                  onChange={changeDataProduct}
                 />
               </div>
-            </div>
-
-            <div className=" flex gap-3 flex-col mt-10 ">
-              {/*  <Select label="Sizes">
-              <Option>Material Tailwind HTML</Option>
-              <Option>Material Tailwind React</Option>
-              <Option>Material Tailwind Vue</Option>
-              <Option>Material Tailwind Angular</Option>
-              <Option>Material Tailwind Svelte</Option>
-            </Select>
-
-            <Select label="Uptimes">
-              <Option>Material Tailwind HTML</Option>
-              <Option>Material Tailwind React</Option>
-              <Option>Material Tailwind Vue</Option>
-              <Option>Material Tailwind Angular</Option>
-              <Option>Material Tailwind Svelte</Option>
-            </Select> */}
-
-              <Select label="Options" onChange={handleChangeOptions}>
-                {options?.map((item) => (
-                  <Option key={item.id} value={item.id}>
-                    {item.name}
-                  </Option>
-                ))}
-              </Select>
             </div>
           </DialogBody>
           {
@@ -178,7 +131,7 @@ const AddProduct = () => {
         color="blue-gray"
         className="font-normal leading-none opacity-70 text-5xl"
       >
-        Product
+        Sizes
       </Typography>
       <div className="flex gap-5 mr-4 ml-4">
         <Input label="Search" type="text" className="w-full  h-full" />
@@ -212,30 +165,21 @@ const AddProduct = () => {
             </tr>
           </thead>
           <tbody>
-            {products?.map(({ id, name, desc, price, image }, index) => {
-              const isLast = index === products.length - 1;
+            {sizes?.map(({ id, value, price, quantity }, index) => {
+              const isLast = index === sizes.length - 1;
               const classes = isLast
                 ? "p-4"
                 : "p-4 border-b border-blue-gray-50";
 
               return (
-                <tr key={name}>
+                <tr key={value}>
                   <td className={classes}>
                     <Typography
                       variant="small"
                       color="blue-gray"
                       className="font-normal w-24"
                     >
-                      {name}
-                    </Typography>
-                  </td>
-                  <td className={classes}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal w-24"
-                    >
-                      {desc}
+                      {value}
                     </Typography>
                   </td>
                   <td className={classes}>
@@ -248,17 +192,19 @@ const AddProduct = () => {
                     </Typography>
                   </td>
                   <td className={classes}>
-                    <img
-                      src={image}
-                      alt=""
-                      className="w-24 h-24 object-cover"
-                    />
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal w-24"
+                    >
+                      {quantity}
+                    </Typography>
                   </td>
                   <td className="flex gap-3 w-full  ">
                     <Button
                       variant="gradient"
                       className="flex items-center gap-2"
-                      onClick={() => dispatch(fetchDeleteProduct(id))}
+                      onClick={() => dispatch(fetchDeleteSizes(id))}
                     >
                       <IoMdAdd size={20} />
                       Delete
@@ -274,4 +220,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default AddSizes;

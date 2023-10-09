@@ -10,59 +10,85 @@ import {
   Option,
   Card,
   Typography,
-  Textarea,
 } from "@material-tailwind/react";
-import {
-  fetchAddProduct,
-  fetchDeleteProduct,
-  fetchGetAllProduct,
-} from "@/redux/products/productSlice";
+import { fetchGetAllProduct } from "@/redux/products/productSlice";
 import { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchGetAllOptions } from "@/redux/options/optionSlice";
+import { fetchGetAllManufactoring } from "@/redux/manufacturing/Manufacturing";
+import { fetchGetAllAditionalOptions } from "@/redux/aditionalOptions/aditionalOptionSlice";
+import { fetchDeleteOptions, fetchGetAddOptions } from "@/redux/options/optionSlice";
 
-const AddProduct = () => {
-  const TABLE_HEAD = ["Name", "desription", "price", "image", "options"];
+const AddOptions = () => {
+  const TABLE_HEAD = ["Name", "options"];
   const [isOpen, setIsOpen] = useState(false);
   const handleOpen = () => setIsOpen(!isOpen);
   const dispatch = useDispatch();
-  const [valueOptions, setValueOptions] = useState([]);
 
-  const [data, setdata] = useState({
+  const [dataOptions, setDataOptions] = useState({
     name: "",
-    desc: "",
-    price: 0,
-    image: "",
-    /*   sizeIds: [], */
-    /*   uptimeid: [], */
-    optionsId: [...valueOptions],
-    /*  reviewIds: [], */
+    aditionalOptionsId: [],
+    manufacturingIds: [],
   });
-  const products = useSelector((state) => state.product.products);
+
+  const manufactoring = useSelector(
+    (state) => state.Manufactoring.manufactoring
+  );
+  const othersOptions = useSelector(
+    (state) => state.AditionalOptionSlice.aditionalOptions
+  );
   const options = useSelector((state) => state.option.options);
 
   useEffect(() => {
     dispatch(fetchGetAllProduct());
-    dispatch(fetchGetAllOptions());
-  }, [products.length]);
+    dispatch(fetchGetAllManufactoring());
+    dispatch(fetchGetAllAditionalOptions());
+  }, [options.length]);
 
   const changeDataProduct = (e) => {
     e.preventDefault();
 
-    setdata({
-      ...data,
+    setDataOptions({
+      ...dataOptions,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleChangeOptions = (Selected) => {
-    const exist = valueOptions.find((p) => p === Selected);
+  const handleChangeManufactoring = (Selected) => {
+    const exist = dataOptions?.valueManufactoring?.find((p) => p === Selected);
     if (Selected !== "") {
       if (!exist) {
-        setValueOptions((prev) => [...prev, Selected]);
+        setDataOptions({
+          ...dataOptions,
+          manufacturingIds: [...dataOptions.manufacturingIds, Selected],
+        });
       } else {
-        setValueOptions(valueOptions.filter((item) => item !== Selected));
+        setDataOptions({
+          ...dataOptions,
+          manufacturingIds: dataOptions.manufacturingIds.filter(
+            (item) => item !== Selected
+          ),
+        });
+      }
+    }
+    return;
+  };
+
+  const handleChangeAditional = (Selected) => {
+    const exist = dataOptions?.aditionalOptionsId?.find((p) => p === Selected);
+    if (Selected !== "") {
+      if (!exist) {
+        setDataOptions({
+          ...dataOptions,
+          aditionalOptionsId: [...dataOptions.aditionalOptionsId, Selected],
+        });
+      } else {
+        setDataOptions({
+          ...dataOptions,
+          aditionalOptionsId: dataOptions.aditionalOptionsId.filter(
+            (item) => item !== Selected
+          ),
+        });
       }
     }
     return;
@@ -70,78 +96,41 @@ const AddProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    dispatch(fetchAddProduct(data));
+   
+    dispatch(fetchGetAddOptions(dataOptions));
+    setDataOptions({
+      name: "",
+      aditionalOptionsId: [],
+      manufacturingIds: [],
+    });
   };
 
   return (
     <>
       {/* MODAL */}
       <Dialog open={isOpen} size={"lg"} handler={handleOpen}>
-        <DialogHeader>Agregar Producto </DialogHeader>
+        <DialogHeader>Agregar Options </DialogHeader>
         <form onSubmit={handleSubmit} className="h-full">
           <DialogBody divider className="flex w-full h-full flex-col ">
             <div className="flex   items-start gap-6 h-full w-full">
               <div className="flex-1 flex w-full justify-around   gap-4 flex-col h-full ">
                 <Input label="Name" name="name" onChange={changeDataProduct} />
-                <Textarea
-                  label="Description"
-                  name="desc"
-                  onChange={changeDataProduct}
-                />
-                <Input
-                  label="Price"
-                  type="number"
-                  name="price"
-                  onChange={changeDataProduct}
-                />
-                <div className="relative flex w-full ">
-                  <Input
-                    label="Image"
-                    className="pr-20 w-full"
-                    containerProps={{
-                      className: "min-w-0",
-                    }}
-                    name="image"
-                    onChange={changeDataProduct}
-                  />
-                  <Button
-                    size="sm"
-                    color={"gray"}
-                    className="!absolute right-1 top-1 rounded"
-                  >
-                    Add
-                  </Button>
-                </div>
-              </div>
-              <div className="flex-1 gap-4 flex flex-col">
-                <img
-                  className="h-full w-full rounded-full object-cover object-center"
-                  src="https://images.unsplash.com/photo-1682407186023-12c70a4a35e0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2832&q=80"
-                  alt="nature image"
-                />
               </div>
             </div>
-
             <div className=" flex gap-3 flex-col mt-10 ">
-              {/*  <Select label="Sizes">
-              <Option>Material Tailwind HTML</Option>
-              <Option>Material Tailwind React</Option>
-              <Option>Material Tailwind Vue</Option>
-              <Option>Material Tailwind Angular</Option>
-              <Option>Material Tailwind Svelte</Option>
-            </Select>
+              <Select
+                label="Aditional Options"
+                onChange={handleChangeAditional}
+              >
+                {othersOptions?.map((item) => (
+                  <Option key={item.id} value={item.id}>
+                    {item.name}
+                  </Option>
+                ))}
+              </Select>
 
-            <Select label="Uptimes">
-              <Option>Material Tailwind HTML</Option>
-              <Option>Material Tailwind React</Option>
-              <Option>Material Tailwind Vue</Option>
-              <Option>Material Tailwind Angular</Option>
-              <Option>Material Tailwind Svelte</Option>
-            </Select> */}
-
-              <Select label="Options" onChange={handleChangeOptions}>
-                {options?.map((item) => (
+              <Select label="Material" onChange={handleChangeManufactoring}>
+                {manufactoring?.map((item) => (
                   <Option key={item.id} value={item.id}>
                     {item.name}
                   </Option>
@@ -178,7 +167,7 @@ const AddProduct = () => {
         color="blue-gray"
         className="font-normal leading-none opacity-70 text-5xl"
       >
-        Product
+        options
       </Typography>
       <div className="flex gap-5 mr-4 ml-4">
         <Input label="Search" type="text" className="w-full  h-full" />
@@ -212,8 +201,8 @@ const AddProduct = () => {
             </tr>
           </thead>
           <tbody>
-            {products?.map(({ id, name, desc, price, image }, index) => {
-              const isLast = index === products.length - 1;
+            {options?.map(({ id, name  }, index) => {
+              const isLast = index === options.length - 1;
               const classes = isLast
                 ? "p-4"
                 : "p-4 border-b border-blue-gray-50";
@@ -229,36 +218,11 @@ const AddProduct = () => {
                       {name}
                     </Typography>
                   </td>
-                  <td className={classes}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal w-24"
-                    >
-                      {desc}
-                    </Typography>
-                  </td>
-                  <td className={classes}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal w-24"
-                    >
-                      {price}
-                    </Typography>
-                  </td>
-                  <td className={classes}>
-                    <img
-                      src={image}
-                      alt=""
-                      className="w-24 h-24 object-cover"
-                    />
-                  </td>
                   <td className="flex gap-3 w-full  ">
                     <Button
                       variant="gradient"
                       className="flex items-center gap-2"
-                      onClick={() => dispatch(fetchDeleteProduct(id))}
+                         onClick={() => dispatch(fetchDeleteOptions(id))}
                     >
                       <IoMdAdd size={20} />
                       Delete
@@ -274,4 +238,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default AddOptions;
