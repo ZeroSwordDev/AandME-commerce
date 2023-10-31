@@ -1,63 +1,47 @@
 "use client";
 import { fetchDetailsProduct } from "@/redux/detailProduct/detailProductSlice";
 import { RiArrowLeftSLine } from "react-icons/ri";
-import { Button, Carousel, Spinner } from "@material-tailwind/react";
+import {
+  Button,
+  Carousel,
+  Spinner,
+  Option,
+  Select,
+} from "@material-tailwind/react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { fetchGetAllSizes } from "@/redux/sizes/sizesSlice";
 
 const page = () => {
   const params = useParams();
   const _items = useSelector((state) => state.detailProduct.detailsProduct);
+  const sizesGlobal = useSelector(state => state.sizes.sizes)
   const router = useRouter();
   const loading = useSelector((state) => state.detailProduct.loading);
   const [sizeTotal, setSizeTotal] = useState(0);
-  const [acumulateItems, setAcumulateItems] = useState([]);
-  const [dataOption, setDataOption] = useState({
-    optionSelected: acumulateItems,
-    uptimeSelected: {},
-  });
 
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchDetailsProduct(params.id));
-  }, [params.id]);
 
   const newItems = { ..._items[0] };
-
+  console.log(newItems);
   const handleChangeCalculatorSticker = (e) => {
     e.preventDefault();
     const value = e.target.value;
-    setSizeTotal(value);
+
+    if(value){
+      setSizeTotal( sizesGlobal.find(p=>p.id === value).quantity)
+    }
+    
   };
 
   useEffect(() => {
-    // Aquí puedes realizar acciones adicionales cuando acumulateItems cambie.
-    console.log(acumulateItems);
-  }, [acumulateItems]);
+    dispatch(fetchDetailsProduct(params.id));
+    dispatch(fetchGetAllSizes());
+  }, [params.id]);
 
-  const handleChangeTotalprice = async (e) => {
-    e.preventDefault();
-    const value = e.target.value;
-    const findSelected = newItems?.Option[0].values?.find(
-      (v) => v.value === value
-    );
-
-    if (value !== "") {
-      const exist = acumulateItems.some((p) => p.name === findSelected.value);
-      if (!exist) {
-        setAcumulateItems([
-          {
-            option: {
-              name: findSelected.value,
-              addprice: findSelected.addprice,
-            },
-          },
-        ]);
-      }
-    } else {
-      setAcumulateItems([]);
-    }
+  const handleOptionSelected = (selected) => {
+    console.log(selected);
   };
 
   const selectOptions = (arr) => {
@@ -68,21 +52,34 @@ const page = () => {
             key={element.name}
             className=" w-full flex flex-col h-full gap-6"
           >
-            <label htmlFor={element.name}>{element.name} </label>
-            <select
-              style={{
-                borderBottom: "1px solid black",
-              }}
-              id={element.name}
-              onChange={handleChangeTotalprice}
-            >
-              <option value={""}>Seleccionar</option>
-              {element?.values?.map((valueObj, i) => (
-                <option key={i} value={valueObj.value}>
-                  {valueObj.value}
-                </option>
-              ))}
-            </select>
+            {element?.manufacturing.length > 1 && (
+              <Select
+                label={element?.name}
+                onChange={handleOptionSelected}
+                variant="static"
+                color="red"
+              >
+                {element?.manufacturing.map((item) => (
+                  <Option key={item.id} value={item.id}>
+                    {item.name}
+                  </Option>
+                ))}
+              </Select>
+            )}
+            {element?.optionsAll.length > 1 && (
+              <Select
+                label={element?.name}
+                onChange={handleOptionSelected}
+                variant="static"
+                color="red"
+              >
+                {element?.optionsAll.map((item) => (
+                  <Option key={item.id} value={item.id}>
+                    {item.name}
+                  </Option>
+                ))}
+              </Select>
+            )}
           </div>
         ))}
       </div>
@@ -122,8 +119,8 @@ const page = () => {
                     >
                       <option value=" ">Seleccionar</option>
                       {newItems?.Size?.map((item, index) => (
-                        <option key={index} value={item?.size}>
-                          {item?.amount}
+                        <option key={index} value={item?.id}>
+                          {item?.value}
                         </option>
                       ))}
                     </select>

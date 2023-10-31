@@ -17,10 +17,10 @@ function page() {
        <Button onClick={() => setCurrentPage("Sizes")}>Sizes</Button>
        <Button onClick={() => setCurrentPage("Uptimes")}>Uptimes</Button>
       </div>
-      {currentPage === "Products" ? <AddProduct /> : null}
-      {currentPage === "Options" ? <AddOptions /> : null}
-      {currentPage === "Sizes" ? <AddSizes /> : null}
-      {currentPage === "Uptimes" ? <AddUptimes /> : null}
+      {currentPage === "Products" && <AddProduct /> }
+      {currentPage === "Options" && <AddOptions /> }
+      {currentPage === "Sizes" && <AddSizes /> }
+      {currentPage === "Uptimes" && <AddUptimes /> }
     </div>
   );
 }

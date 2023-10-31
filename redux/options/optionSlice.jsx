@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   options: [],
+  optionsProducts: [],
   loading: false,
   error: false,
 };
@@ -52,16 +53,32 @@ export const fetchGetAllOptions = () => async (dispatch) => {
   }
 };
 
+export const fetchGetOneOption = (arr) => async (dispatch) => {
+  try {
+    dispatch(setLoading(true));
+    const res = await fetch(`/api/options`);
+    const data = await res.json();
+    dispatch(setGetallOptions(data));
+  } catch (error) {
+    dispatch(setError(true));
+    console.log(error);
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+
 export const fetchGetAddOptions = (data) => async (dispatch) => {
+  console.log(data);
   try {
     dispatch(setLoading(true));
     const res = await fetch(`/api/options`, {
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify({...data}),
     });
 
     const resposne = await res.json();
-    dispatch(setGetAddOptions(data));
+    console.log(resposne);
+    dispatch(setGetAddOptions(resposne));
   } catch (error) {
     dispatch(setError(true));
     console.log(error);
@@ -71,7 +88,6 @@ export const fetchGetAddOptions = (data) => async (dispatch) => {
 };
 
 export const fetchDeleteOptions = (id) => async (dispatch) => {
-  console.log(id)
   try {
     dispatch(setLoading(true));
     const res = await fetch(`/api/options/${id}`, {

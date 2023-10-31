@@ -9,7 +9,12 @@ export const GET = async (request, { params }) => {
     const products = await prisma.product.findMany({
       where: { id },
       include: {
-        Option: true,
+        Option: {
+          include: {
+            manufacturing: true,
+            optionsAll: true,
+          }
+        },
         Uptime: true,
         Size: true,
       },

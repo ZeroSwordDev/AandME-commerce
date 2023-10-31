@@ -21,54 +21,120 @@ import { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchGetAllOptions } from "@/redux/options/optionSlice";
+import { fetchGetAllSizes } from "@/redux/sizes/sizesSlice";
+import { fetchGetAllUptimes } from "@/redux/uptimes/uptimesSlice";
 
 const AddProduct = () => {
   const TABLE_HEAD = ["Name", "desription", "price", "image", "options"];
   const [isOpen, setIsOpen] = useState(false);
   const handleOpen = () => setIsOpen(!isOpen);
   const dispatch = useDispatch();
-  const [valueOptions, setValueOptions] = useState([]);
 
-  const [data, setdata] = useState({
+  const [selectedValues, setSelectedValues] = useState({
+    options: [],
+    sizes: [],
+    uptimes: [],
+  });
+
+  const [data, setData] = useState({
     name: "",
     desc: "",
     price: 0,
     image: "",
-    /*   sizeIds: [], */
-    /*   uptimeid: [], */
-    optionsId: [...valueOptions],
-    /*  reviewIds: [], */
+    sizeIds: [],
+    uptimeid: [],
+    optionsId: [],
+    reviewIds: [],
   });
+
+  console.log(data)
   const products = useSelector((state) => state.product.products);
   const options = useSelector((state) => state.option.options);
+  const sizes = useSelector((state) => state.sizes.sizes);
+  const uptimes = useSelector((state) => state.uptime.uptimes);
 
   useEffect(() => {
     dispatch(fetchGetAllProduct());
     dispatch(fetchGetAllOptions());
-  }, [products.length]);
+    dispatch(fetchGetAllSizes());
+    dispatch(fetchGetAllUptimes());
+
+    if (!isOpen) {
+      setSelectedValues({
+        options: [],
+        sizes: [],
+        uptimes: [],
+      });
+
+      setData({
+        name: "",
+        desc: "",
+        price: 0,
+        image: "",
+        sizeIds: [],
+        uptimeid: [],
+        optionsId: [],
+        reviewIds: [],
+      });
+    }
+  }, [products.length, isOpen]);
+
+  const handleChangeOptions = (selected) => {
+ const exist = data.optionsId.some(item => item === selected)
+    if(!exist) {
+        setData({
+          ...data,
+          optionsId: [...data.optionsId, selected]
+        })
+    }else{
+      setData({
+        ...data,
+        optionsId:  data.optionsId.filter(item=> item !== selected)
+      })
+    }
+  }
+ 
+
+  const handleChangeSizes = (selected) => {
+    const exist = data.sizeIds.some(item => item === selected)
+       if(!exist) {
+           setData({
+             ...data,
+             sizeIds: [...data.sizeIds, selected]
+           })
+       }else{
+         setData({
+           ...data,
+           sizeIds:  data.sizeIds.filter(item=> item !== selected)
+         })
+       }
+      }
+     const handleChangeUptimes = (selected) => {
+      const exist = data.uptimeid.some(item => item === selected)
+         if(!exist) {
+             setData({
+               ...data,
+               uptimeid: [...data.uptimeid, selected]
+             })
+         }else{
+           setData({
+             ...data,
+             uptimeid:  data.uptimeid.filter(item=> item !== selected)
+           })
+         }
+         
+       }
+  
 
   const changeDataProduct = (e) => {
     e.preventDefault();
-
-    setdata({
+    setData({
       ...data,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleChangeOptions = (Selected) => {
-    const exist = valueOptions.find((p) => p === Selected);
-    if (Selected !== "") {
-      if (!exist) {
-        setValueOptions((prev) => [...prev, Selected]);
-      } else {
-        setValueOptions(valueOptions.filter((item) => item !== Selected));
-      }
-    }
-    return;
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     dispatch(fetchAddProduct(data));
@@ -124,23 +190,31 @@ const AddProduct = () => {
             </div>
 
             <div className=" flex gap-3 flex-col mt-10 ">
-              {/*  <Select label="Sizes">
-              <Option>Material Tailwind HTML</Option>
-              <Option>Material Tailwind React</Option>
-              <Option>Material Tailwind Vue</Option>
-              <Option>Material Tailwind Angular</Option>
-              <Option>Material Tailwind Svelte</Option>
-            </Select>
+              <Select
+                label="Sizes"
+                onChange={(id) => handleChangeSizes( id)}
+              >
+                {sizes?.map((item) => (
+                  <Option key={item.id} value={item.id}>
+                    {item.value}
+                  </Option>
+                ))}
+              </Select>
+              <Select
+                label="Uptimes"
+                onChange={(id) => handleChangeUptimes( id)}
+              >
+                {uptimes?.map((item) => (
+                  <Option key={item.id} value={item.id}>
+                    {item.name}
+                  </Option>
+                ))}
+              </Select>
 
-            <Select label="Uptimes">
-              <Option>Material Tailwind HTML</Option>
-              <Option>Material Tailwind React</Option>
-              <Option>Material Tailwind Vue</Option>
-              <Option>Material Tailwind Angular</Option>
-              <Option>Material Tailwind Svelte</Option>
-            </Select> */}
-
-              <Select label="Options" onChange={handleChangeOptions}>
+              <Select
+                label="Options"
+                onChange={(id) => handleChangeOptions( id)}
+              >
                 {options?.map((item) => (
                   <Option key={item.id} value={item.id}>
                     {item.name}
@@ -219,7 +293,7 @@ const AddProduct = () => {
                 : "p-4 border-b border-blue-gray-50";
 
               return (
-                <tr key={name}>
+                <tr key={id}>
                   <td className={classes}>
                     <Typography
                       variant="small"

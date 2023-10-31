@@ -96,7 +96,6 @@ const AddOptions = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-   
     dispatch(fetchGetAddOptions(dataOptions));
     setDataOptions({
       name: "",

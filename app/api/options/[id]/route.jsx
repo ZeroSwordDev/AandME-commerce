@@ -34,6 +34,7 @@ export const GET = async (request, { params }) => {
       },
       include: {
         manufacturing: true,
+        optionsAll: true
       },
     });
 

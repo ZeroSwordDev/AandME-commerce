@@ -15,7 +15,6 @@ export const GET = async (request) => {
 export const POST = async (request) => {
   try {
     const options = await request.json();
-
     const newOptions = await prisma.Options.create({
       data: options,
     });
