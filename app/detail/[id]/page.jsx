@@ -7,42 +7,84 @@ import {
   Spinner,
   Option,
   Select,
+  Input,
 } from "@material-tailwind/react";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchGetAllSizes } from "@/redux/sizes/sizesSlice";
+import { fetchGetAllOptions } from "@/redux/options/optionSlice";
+import { fetchGetAllUptimes } from "@/redux/uptimes/uptimesSlice";
+import { fetchGetAllManufactoring } from "@/redux/manufacturing/Manufacturing";
+import Image from "next/image";
 
 const page = () => {
   const params = useParams();
-  const _items = useSelector((state) => state.detailProduct.detailsProduct);
-  const sizesGlobal = useSelector(state => state.sizes.sizes)
   const router = useRouter();
+  const _items = useSelector((state) => state.detailProduct.detailsProduct);
+  const sizesGlobal = useSelector((state) => state.sizes.sizes);
+  const uptimeGlobal = useSelector((state) => state.uptime.uptimes);
+  const optionsGlobal = useSelector((state) => state.option.options);
   const loading = useSelector((state) => state.detailProduct.loading);
   const [sizeTotal, setSizeTotal] = useState(0);
-
+  const [dataOptions, setdataOptions] = useState({});
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFileUrl, setSelectedFileUrl] = useState(null);
   const dispatch = useDispatch();
 
   const newItems = { ..._items[0] };
   console.log(newItems);
-  const handleChangeCalculatorSticker = (e) => {
+  const handleChangeCalculatorSticker = (e, key) => {
     e.preventDefault();
     const value = e.target.value;
 
-    if(value){
-      setSizeTotal( sizesGlobal.find(p=>p.id === value).quantity)
+    if (value) {
+      setSizeTotal(sizesGlobal.find((p) => p.id === value).quantity);
+      setdataOptions({
+        ...dataOptions,
+        [key]: e.target.value,
+      })
     }
-    
   };
-
+  let totalPrice = newItems?.price;
+  const handleOptionSelected = (selected, key) => {
+  
+    selected ?
+    setdataOptions({
+      ...dataOptions,
+      [key]: selected,
+    }) : null;
+  };
+  const handleUptimeSelected = (event, key) => {
+    const value = event.target.value;
+    value ?
+    setdataOptions({
+      ...dataOptions,
+      [key]: event.target.value,
+    }): null;
+  };
+  console.log(dataOptions);
   useEffect(() => {
     dispatch(fetchDetailsProduct(params.id));
     dispatch(fetchGetAllSizes());
+    dispatch(fetchGetAllOptions());
+    dispatch(fetchGetAllUptimes());
+    dispatch(fetchGetAllManufactoring());
   }, [params.id]);
 
-  const handleOptionSelected = (selected) => {
-    console.log(selected);
+  const fileInputRef = useRef(null);
+
+  const handleFileUpload = () => {
+    fileInputRef.current.click();
   };
+
+  const handleFileSelected = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      setSelectedFileUrl(URL.createObjectURL(file));
+    }
+  }
 
   const selectOptions = (arr) => {
     return (
@@ -55,7 +97,7 @@ const page = () => {
             {element?.manufacturing.length > 1 && (
               <Select
                 label={element?.name}
-                onChange={handleOptionSelected}
+                onChange={(e) => handleOptionSelected(e, "Options")}
                 variant="static"
                 color="red"
               >
@@ -69,7 +111,7 @@ const page = () => {
             {element?.optionsAll.length > 1 && (
               <Select
                 label={element?.name}
-                onChange={handleOptionSelected}
+                onChange={(e) => handleOptionSelected(e, "Options")}
                 variant="static"
                 color="red"
               >
@@ -115,7 +157,7 @@ const page = () => {
                       style={{
                         borderBottom: "1px solid black",
                       }}
-                      onChange={handleChangeCalculatorSticker}
+                      onChange={(e) =>handleChangeCalculatorSticker(e, 'Sizes')}
                     >
                       <option value=" ">Seleccionar</option>
                       {newItems?.Size?.map((item, index) => (
@@ -149,10 +191,11 @@ const page = () => {
                       style={{
                         borderBottom: "1px solid black",
                       }}
+                      onChange={(e) => handleUptimeSelected(e, 'Uptime')}
                     >
                       <option value="">Seleccionar</option>
                       {newItems?.Uptime?.map((item, index) => (
-                        <option key={index} value={item?.agg}>
+                        <option key={index} value={item?.id}>
                           {item?.name}
                         </option>
                       ))}
@@ -161,7 +204,7 @@ const page = () => {
                 </div>
 
                 <div className="flex flex-col w-full justify-end items-end ">
-                  {/*    <h5>TOTAL: ${pricetotal ? pricetotal : newItems?.price}</h5> */}
+                  <h5>TOTAL: ${totalPrice}</h5>
                   <p className="font-bold">Precio unitario:$ 234</p>
                 </div>
               </div>
@@ -177,12 +220,19 @@ const page = () => {
               </div>
             </div>
             <div className="flex items-center justify-center flex-col flex-1 w-full h-full gap-3">
-              <Button fullWidth className=" h-24">
+            <Button fullWidth variant="outlined" className=" h-24" >
+                Agregar al carrito
+              </Button>
+              <Button fullWidth className=" h-24" onClick={handleFileUpload}>
                 Sube tu Diseño
               </Button>
-              <Button fullWidth variant="outlined" className=" h-24">
-                Realiza tu diseño en Canvas
-              </Button>
+              <input
+        type="file"
+        accept="image/*"
+        style={{ display: 'none' }}
+        ref={fileInputRef}
+        onChange={handleFileSelected}
+      />
             </div>
           </div>
         </div>
