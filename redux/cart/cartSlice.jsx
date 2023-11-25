@@ -20,7 +20,7 @@ export const cartSlice = createSlice({
         find.quantity++;
       }
     },
-    addCartOne: (state, action) => {
+    addCartOneDetails: (state, action) => {
       const find = state.cart.find((p) => p._id === action.payload._id);
       find ? (find.quantity < 10 ? find.quantity++ : null) : null;
     },
@@ -68,7 +68,6 @@ export const fetchGetAllCart = (product) => async (dispatch) => {
 
 export const deleteOneCart = (id) => async (dispatch) => {
   try {
-    console.log(id);
     dispatch(deleteCartOne(id));
   } catch (error) {
     console.log(error);

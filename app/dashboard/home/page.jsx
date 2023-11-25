@@ -4,7 +4,7 @@ import React from "react";
 
 const home = () => {
   const session = useSession()
-  console.log(session);
+
 
   return <div className=" w-screen h-screen">
     <div className="flex h-full w-full bg-blue-500 justify-center items-center">

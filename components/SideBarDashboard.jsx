@@ -5,13 +5,7 @@ import {
   ListItem,
   ListItemPrefix,
 } from "@material-tailwind/react";
-import {
-  PresentationChartBarIcon,
-  ShoppingBagIcon,
-  UserCircleIcon,
-/*   Cog6ToothIcon, */
-  PowerIcon,
-} from "@heroicons/react/24/solid";
+
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 
@@ -23,34 +17,34 @@ export default function SideBarDashboard() {
           Sidebar
         </Typography>
       </div>
-      <List>
+      <List className="flex  justify-between h-full">
+        <div className="">
+          
         <Link href={"/dashboard/home"}>
           <ListItem>
-            <ListItemPrefix>
-              <PresentationChartBarIcon className="h-5 w-5" />
-            </ListItemPrefix>
             Dashboard
           </ListItem>
         </Link>
         <Link href={'/dashboard/productsdash'}>
           <ListItem>
-            <ListItemPrefix>
-              <ShoppingBagIcon className="h-5 w-5" />
-            </ListItemPrefix>
             Products
           </ListItem>
         </Link>
         <ListItem>
-          <ListItemPrefix>
-            <UserCircleIcon className="h-5 w-5" />
-          </ListItemPrefix>
+          Ventas
+        </ListItem>
+        <ListItem>
+          Inventario
+        </ListItem>
+        <ListItem>
+          Options
+        </ListItem>
+        <ListItem>
           Edit
         </ListItem>
 
+        </div>
         <ListItem onClick={() => signOut({callbackUrl:'/login'})}>
-          <ListItemPrefix>
-            <PowerIcon className="h-5 w-5" />
-          </ListItemPrefix>
           Log Out
         </ListItem>
       </List>

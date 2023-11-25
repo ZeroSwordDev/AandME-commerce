@@ -23,13 +23,12 @@ export default function RootLayout({ children }) {
           <nav>
             <DrawerCart closeDrawer={closeDrawer} open={open} />
             <Navbar openDrawer={openDrawer} />
-            <SubNavbar />
-          </nav>
+            <SubNavbar /> 
+          </nav> 
             <ThemeProvider>{children}</ThemeProvider>
-
-          <footer>
+         <footer>
             <Footer />
-          </footer>
+          </footer> 
           </AuthProtected>
         </Provider>
       </body>

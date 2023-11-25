@@ -9,7 +9,12 @@ export const GET = async (request, { params }) => {
     const products = await prisma.product.findMany({
       where: { id },
       include: {
-        Option: true,
+        Option: {
+          include: {
+            manufacturing: true,
+            optionsAll: true,
+          }
+        },
         Uptime: true,
         Size: true,
       },
@@ -25,9 +30,12 @@ export const PUT = async (request, { params }) => {
     /* PUT ONE PRODUCTS */
     const productUp = await request.json();
     const { id } = params;
-    const productsUPDATE = await products.findByIdAndUpdate(id, productUp, {
-      new: true,
-    });
+     await prisma.product.updateMany(
+      { where: id , data: productUp }
+    )
+
+    const productsUPDATE = prisma.product.findMany();
+
 
     return NextResponse.json(productsUPDATE, { status: 200 });
   } catch (error) {
@@ -37,11 +45,14 @@ export const PUT = async (request, { params }) => {
 
 export const DELETE = async (request, { params }) => {
   try {
-    /* DELETE ONE PRODUCTS */
     const { id } = params;
-    await products.findByIdAndDelete(id);
 
-    return NextResponse.json("Product has been deleted!", { status: 200 });
+    await prisma.product.delete({
+      where: {
+        id,
+      },
+    });
+    return NextResponse.json(id, { status: 200 });
   } catch (error) {
     return NextResponse.json("dataBase not found Users", { status: 501 });
   }
