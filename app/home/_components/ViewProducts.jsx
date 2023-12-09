@@ -16,7 +16,7 @@ const ViewProducts = ({ item }) => {
             size={40}
             cursor={"pointer"}
             className=" p-1 hover:bg-white scale-x-95 rounded-full hover:scale-100 "
-            onClick={() => router.push(`/detail/${item.id}`)}
+            onClick={() => router.push(`/home/detail/${item.id}`)}
           />
 
         <AiOutlineHeart

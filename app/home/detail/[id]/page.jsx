@@ -10,13 +10,20 @@ import {
   Input,
 } from "@material-tailwind/react";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchGetAllSizes } from "@/redux/sizes/sizesSlice";
 import { fetchGetAllOptions } from "@/redux/options/optionSlice";
 import { fetchGetAllUptimes } from "@/redux/uptimes/uptimesSlice";
 import { fetchGetAllManufactoring } from "@/redux/manufacturing/Manufacturing";
 import Image from "next/image";
+import { addCartOne, addOneCart } from "@/redux/cart/cartSlice";
 
 const page = () => {
   const params = useParams();
@@ -25,51 +32,81 @@ const page = () => {
   const sizesGlobal = useSelector((state) => state.sizes.sizes);
   const uptimeGlobal = useSelector((state) => state.uptime.uptimes);
   const optionsGlobal = useSelector((state) => state.option.options);
+  const cart = useSelector((state) => state.cart.cart);
   const loading = useSelector((state) => state.detailProduct.loading);
   const [sizeTotal, setSizeTotal] = useState(0);
-  const [dataOptions, setdataOptions] = useState({});
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [selectedFileUrl, setSelectedFileUrl] = useState(null);
+  const [dataOptions, setdataOptions] = useState([]);
   const dispatch = useDispatch();
 
   const newItems = { ..._items[0] };
-  console.log(newItems);
   const handleChangeCalculatorSticker = (e, key) => {
-    e.preventDefault();
+    const findFirst = dataOptions.some((p) => p[key]);
     const value = e.target.value;
 
     if (value) {
-      setSizeTotal(sizesGlobal.find((p) => p.id === value).quantity);
-      setdataOptions({
-        ...dataOptions,
-        [key]: e.target.value,
-      })
+      if (!findFirst) {
+        setdataOptions([...dataOptions, { [key]: value }]);
+      } else {
+        const updatedOptions = dataOptions.map((option) => {
+          if (option[key]) {
+            return { ...option, [key]: value };
+          }
+          return option;
+        });
+        setdataOptions(updatedOptions);
+      }
     }
   };
   let totalPrice = newItems?.price;
   const handleOptionSelected = (selected, key) => {
-  
-    selected ?
-    setdataOptions({
-      ...dataOptions,
-      [key]: selected,
-    }) : null;
+    const findFirst = dataOptions.some((p) => p[key]);
+
+    if (selected) {
+      if (!findFirst) {
+        setdataOptions([...dataOptions, { [key]: selected }]);
+      } else {
+        const updatedOptions = dataOptions.map((option) => {
+          if (option[key]) {
+            return { ...option, [key]: selected };
+          }
+          return option;
+        });
+        setdataOptions(updatedOptions);
+      }
+    }
   };
   const handleUptimeSelected = (event, key) => {
     const value = event.target.value;
-    value ?
-    setdataOptions({
-      ...dataOptions,
-      [key]: event.target.value,
-    }): null;
+    const findFirst = dataOptions.some((p) => p[key]);
+
+    if (value) {
+      if (!findFirst) {
+        setdataOptions([...dataOptions, { [key]: value }]);
+      } else {
+        const updatedOptions = dataOptions.map((option) => {
+          if (option[key]) {
+            return { ...option, [key]: value };
+          }
+          return option;
+        });
+        setdataOptions(updatedOptions);
+      }
+    }
   };
-  console.log(dataOptions);
+
+  const fetchs = useCallback(
+    () => (
+      dispatch(fetchDetailsProduct(params.id)),
+      dispatch(fetchGetAllSizes()),
+      dispatch(fetchGetAllOptions()),
+      dispatch(fetchGetAllUptimes()),
+      dispatch(fetchGetAllManufactoring())
+    ),
+    [params.id]
+  );
+
   useEffect(() => {
-    dispatch(fetchDetailsProduct(params.id));
-    dispatch(fetchGetAllSizes());
-    dispatch(fetchGetAllOptions());
-    dispatch(fetchGetAllUptimes());
-    dispatch(fetchGetAllManufactoring());
+    fetchs();
   }, [params.id]);
 
   const fileInputRef = useRef(null);
@@ -81,10 +118,22 @@ const page = () => {
   const handleFileSelected = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setSelectedFile(file);
-      setSelectedFileUrl(URL.createObjectURL(file));
+      setdataOptions([
+        ...dataOptions,
+        { ["image"]: URL.createObjectURL(file) },
+      ]);
     }
-  }
+  };
+
+  const handleAddCartProduct = (e) => {
+    e.preventDefault();
+
+    if (dataOptions.length === 0) {
+      return alert("No hay opciones selecionadas");
+    }
+
+    dispatch(addOneCart({ ...newItems, dataOptions }));
+  };
 
   const selectOptions = (arr) => {
     return (
@@ -157,7 +206,9 @@ const page = () => {
                       style={{
                         borderBottom: "1px solid black",
                       }}
-                      onChange={(e) =>handleChangeCalculatorSticker(e, 'Sizes')}
+                      onChange={(e) =>
+                        handleChangeCalculatorSticker(e, "Sizes")
+                      }
                     >
                       <option value=" ">Seleccionar</option>
                       {newItems?.Size?.map((item, index) => (
@@ -191,7 +242,7 @@ const page = () => {
                       style={{
                         borderBottom: "1px solid black",
                       }}
-                      onChange={(e) => handleUptimeSelected(e, 'Uptime')}
+                      onChange={(e) => handleUptimeSelected(e, "Uptime")}
                     >
                       <option value="">Seleccionar</option>
                       {newItems?.Uptime?.map((item, index) => (
@@ -220,19 +271,24 @@ const page = () => {
               </div>
             </div>
             <div className="flex items-center justify-center flex-col flex-1 w-full h-full gap-3">
-            <Button fullWidth variant="outlined" className=" h-24" >
+              <Button
+                fullWidth
+                variant="outlined"
+                className=" h-24"
+                onClick={handleAddCartProduct}
+              >
                 Agregar al carrito
               </Button>
               <Button fullWidth className=" h-24" onClick={handleFileUpload}>
                 Sube tu Diseño
               </Button>
               <input
-        type="file"
-        accept="image/*"
-        style={{ display: 'none' }}
-        ref={fileInputRef}
-        onChange={handleFileSelected}
-      />
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                ref={fileInputRef}
+                onChange={handleFileSelected}
+              />
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import ViewProducts from "./ViewProducts";
+import ViewProducts from "../app/home/_components/ViewProducts";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchGetAllProduct } from "@/redux/products/productSlice";
 import { Spinner } from "@material-tailwind/react";

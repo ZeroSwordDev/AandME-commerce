@@ -7,18 +7,18 @@ import {
 } from "@material-tailwind/react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ViewCartProduct from "./ViewCartProduct";
+import ViewCartProduct from "../../../components/ViewCartProduct";
 import { removeAllCart } from "@/redux/cart/cartSlice";
 import Link from "next/link";
 
 const DrawerCart = ({ closeDrawer, open }) => {
   const cart = useSelector((state) => state.cart.cart);
+  const dispatch = useDispatch();
   const totalAmount = cart.reduce(
     (acc, obj) => acc + obj.quantity * obj.price,
     0
   );
 
-  const dispatch = useDispatch();
   return (
     <div
       className=" h-full w-full z-40 select-none"
@@ -68,7 +68,7 @@ const DrawerCart = ({ closeDrawer, open }) => {
               <button
                 className="bg-white text-black p-2 rounded-md  disabled:bg-gray-600"
                 disabled={cart?.length > 0 ? false : true}
-                onClick={() => closeDrawer(false)}
+                onClick={closeDrawer}
               >
                 Pagar
               </button>

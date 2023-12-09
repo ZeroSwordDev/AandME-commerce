@@ -21,13 +21,13 @@ export const POST = async (request) => {
     const salt = bcrypt.genSaltSync(10);
     const hashPassword = bcrypt.hashSync(password, salt);
 
-    const user = new users({
+    const user = prisma.user.create({
       fullname,
       Email,
       password: hashPassword,
     });
 
-    const newUser = await user.save();
+   console.log(user)
     return NextResponse.json(newUser, { status: 200 });
   } catch (error) {
     console.log(error);

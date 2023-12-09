@@ -24,6 +24,9 @@ export const cartSlice = createSlice({
       const find = state.cart.find((p) => p._id === action.payload._id);
       find ? (find.quantity < 10 ? find.quantity++ : null) : null;
     },
+    addCartOne: (state, action) => {
+      state.cart = [...state.cart, action.payload];
+    },
     deleteCartOne: (state, action) => {
       const find = state.cart.find((p) => p._id === action.payload);
 
@@ -34,7 +37,7 @@ export const cartSlice = createSlice({
         : null;
     },
     removeCartAll: (state, action) => {
-      state.cart = []
+      state.cart = [];
     },
 
     setError: (state, action) => {
@@ -52,7 +55,7 @@ export const {
   deleteCartOne,
   setLoading,
   setError,
-  removeCartAll
+  removeCartAll,
 } = cartSlice.actions;
 
 export const fetchGetAllCart = (product) => async (dispatch) => {
@@ -75,6 +78,7 @@ export const deleteOneCart = (id) => async (dispatch) => {
 };
 
 export const addOneCart = (product) => async (dispatch) => {
+  console.log(product);
   try {
     dispatch(addCartOne(product));
   } catch (error) {
